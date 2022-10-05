@@ -1,9 +1,10 @@
 use anyhow::Result;
-use std::fs;
+use std::{fs, time::Instant};
 
 pub mod day1;
 pub mod day2;
 pub mod day3;
+pub mod day4;
 
 const INPUT_BASE_PATH: &str = "../inputs/";
 
@@ -31,22 +32,33 @@ pub trait DaySolution {
         return input;
     }
 
-    fn part1(&self) -> PartResult;
+    fn part1(&mut self) -> PartResult;
 
-    fn part2(&self) -> PartResult;
+    fn part2(&mut self) -> PartResult;
 }
 
 pub fn print_solution(title: &str, lines: Vec<String>) {
-    println!("{}", title);
-    for line in lines.iter() {
-        println!("\t{}", &line);
+    let title = title.trim();
+    let indent_size = title.len() + 1;
+
+    println!("{} {}", title, lines.first().unwrap());
+    for line in lines.iter().skip(1) {
+        println!("{}{}", " ".repeat(indent_size), &line);
     }
 }
 
-pub fn run_solution(solution: &Box<dyn DaySolution>) {
+pub fn run_solution(solution: &mut Box<dyn DaySolution>) {
     println!("---- {} ----", solution.get_name());
+
+    let current = Instant::now();
     let part1 = solution.part1().unwrap();
+    let duration1 = current.elapsed();
     print_solution("Part 1:", part1);
+    println!("Elapsed time: {:?}\n", duration1);
+
+    let current = Instant::now();
     let part2 = solution.part2().unwrap();
+    let duration2 = current.elapsed();
     print_solution("Part 2:", part2);
+    println!("Elapsed time: {:?}\n", duration2);
 }

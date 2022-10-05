@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use anyhow::Result;
 
-pub fn parse_input_lines<T: FromStr>(input: String) -> Result<Vec<T>> {
+pub fn parse_input_lines<T: FromStr>(input: &String) -> Result<Vec<T>> {
     Ok(input
         .lines()
         .filter_map(|line| line.parse::<T>().ok())

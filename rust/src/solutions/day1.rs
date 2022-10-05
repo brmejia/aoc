@@ -10,7 +10,7 @@ impl DaySolution for Day1 {
         return 1;
     }
 
-    fn part1(&self) -> PartResult {
+    fn part1(&mut self) -> PartResult {
         let input = self.get_input(None);
         let ups = input.matches("(").count();
         let downs = input.matches(")").count();
@@ -20,7 +20,7 @@ impl DaySolution for Day1 {
         return Ok(vec![floor.to_string()]);
     }
 
-    fn part2(&self) -> PartResult {
+    fn part2(&mut self) -> PartResult {
         let input = self.get_input(None);
 
         let expected_floor = -1;

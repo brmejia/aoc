@@ -45,36 +45,25 @@ impl DaySolution for Day2 {
         return 2;
     }
 
-    fn part1(&self) -> PartResult {
+    fn part1(&mut self) -> PartResult {
         let input = self.get_input(None);
-        let lines = aoc::parse_input_lines::<String>(input);
+        let lines = aoc::parse_input_lines::<String>(&input).unwrap();
 
-        let packages: Vec<Package> = lines
-            .unwrap()
-            .into_iter()
-            // .map(|line| parse_package(&line).unwrap())
-            .map(|line| Package::from(line))
-            .collect();
+        let packages: Vec<Package> = lines.into_iter().map(|line| Package::from(line)).collect();
 
         let total_surface: usize = packages
             .iter()
-            // .map(|package| package_required_surface(*package))
             .map(|package| package.required_surface())
             .sum();
 
         return Ok(vec![total_surface.to_string()]);
     }
 
-    fn part2(&self) -> PartResult {
+    fn part2(&mut self) -> PartResult {
         let input = self.get_input(None);
-        let lines = aoc::parse_input_lines::<String>(input);
+        let lines = aoc::parse_input_lines::<String>(&input).unwrap();
 
-        let packages: Vec<Package> = lines
-            .unwrap()
-            .into_iter()
-            // .map(|line| parse_package(&line).unwrap())
-            .map(|line| Package::from(line))
-            .collect();
+        let packages: Vec<Package> = lines.into_iter().map(|line| Package::from(line)).collect();
 
         let total_ribon: usize = packages
             .iter()

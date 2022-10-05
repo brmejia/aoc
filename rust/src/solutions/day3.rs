@@ -63,9 +63,9 @@ impl DaySolution for Day3 {
         return 3;
     }
 
-    fn part1(&self) -> PartResult {
+    fn part1(&mut self) -> PartResult {
         let input = self.get_input(None);
-        let lines = aoc::parse_input_lines::<String>(input).unwrap();
+        let lines = aoc::parse_input_lines::<String>(&input).unwrap();
 
         return Ok(lines
             .into_iter()
@@ -73,9 +73,9 @@ impl DaySolution for Day3 {
             .collect());
     }
 
-    fn part2(&self) -> PartResult {
+    fn part2(&mut self) -> PartResult {
         let input = self.get_input(None);
-        let lines = aoc::parse_input_lines::<String>(input).unwrap();
+        let lines = aoc::parse_input_lines::<String>(&input).unwrap();
 
         return Ok(lines
             .into_iter()
