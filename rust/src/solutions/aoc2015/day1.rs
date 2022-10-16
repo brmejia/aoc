@@ -1,15 +1,24 @@
-use super::{DaySolution, PartResult};
+use crate::solutions::{Day, DaySolution, PartResult, Solution};
 
+#[derive(Debug)]
 pub struct Day1 {}
 
-impl DaySolution for Day1 {
+impl Day1 {
+    pub fn new() -> Self {
+        return Self {};
+    }
+}
+
+impl Day for Day1 {
     fn get_year(&self) -> usize {
         return 2015;
     }
     fn get_day(&self) -> usize {
         return 1;
     }
+}
 
+impl Solution for Day1 {
     fn part1(&mut self) -> PartResult {
         let input = self.get_input(None);
         let ups = input.matches("(").count();
@@ -46,3 +55,5 @@ impl DaySolution for Day1 {
         return Ok(vec![idx.to_string()]);
     }
 }
+
+impl DaySolution for Day1 {}

@@ -2,8 +2,9 @@ use std::collections::HashMap;
 
 use anyhow::Ok;
 
-use super::{DaySolution, PartResult};
+use crate::solutions::{Day, DaySolution, PartResult, Solution};
 
+#[derive(Debug)]
 pub struct Day4 {
     hashes: HashMap<usize, usize>,
 }
@@ -11,10 +12,12 @@ pub struct Day4 {
 impl Day4 {
     pub fn new() -> Self {
         return Self {
-            hashes: HashMap::new(),
+            hashes: HashMap::default(),
         };
     }
+}
 
+impl Day4 {
     fn find_hash_integer<T>(&mut self, input: &String, difficulty: T) -> usize
     where
         T: Into<usize> + Copy,
@@ -51,14 +54,16 @@ impl Day4 {
     }
 }
 
-impl DaySolution for Day4 {
+impl Day for Day4 {
     fn get_year(&self) -> usize {
         return 2015;
     }
     fn get_day(&self) -> usize {
         return 4;
     }
+}
 
+impl Solution for Day4 {
     fn part1(&mut self) -> PartResult {
         let input = self.get_input(None);
         let base_key = aoc::parse_input_lines::<String>(&input)
@@ -84,6 +89,8 @@ impl DaySolution for Day4 {
         return Ok(vec![k.to_string()]);
     }
 }
+
+impl DaySolution for Day4 {}
 
 #[cfg(test)]
 mod tests {

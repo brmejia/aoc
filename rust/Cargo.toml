@@ -1,5 +1,5 @@
 [package]
-name = "aoc_2015"
+name = "AoC"
 version = "0.1.0"
 edition = "2021"
 
@@ -11,12 +11,7 @@ path = "src/lib.rs"
 
 [dependencies]
 anyhow = "1.0.65"
+clap = { version="4.0.10", features= ["derive"] }
+itertools = "0.10.5"
 md5 = "0.7.0"
 
-
-# [workspace]
-
-# members = [
-#     "day1",
-#     # "day2",
-# ]

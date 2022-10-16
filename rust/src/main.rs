@@ -1,15 +1,20 @@
 mod solutions;
-use solutions::{day1::Day1, day2::Day2, day3::Day3, day4::Day4, DaySolution};
+
+use clap::Parser;
+
+#[derive(Parser)]
+#[command(author, version, about, long_about = None)]
+struct Cli {
+    year: u16,
+    day: Option<u16>,
+}
 
 fn main() {
-    let mut days: Vec<Box<dyn DaySolution>> = vec![
-        Box::new(Day1 {}),
-        Box::new(Day2 {}),
-        Box::new(Day3 {}),
-        Box::new(Day4::new()),
-    ];
+    let cli = Cli::parse();
+    let selected_day = solutions::get_solution(cli.year, cli.day);
+    println!("{:?}", selected_day);
 
-    for day in days.iter_mut() {
-        solutions::run_solution(day)
+    for mut sol in selected_day.into_iter() {
+        sol.run()
     }
 }

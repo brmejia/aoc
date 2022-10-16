@@ -1,8 +1,15 @@
 use std::collections::HashSet;
 
-use super::{DaySolution, PartResult};
+use crate::solutions::{Day, DaySolution, PartResult, Solution};
 
+#[derive(Debug)]
 pub struct Day3 {}
+
+impl Day3 {
+    pub fn new() -> Self {
+        return Self {};
+    }
+}
 
 #[derive(Eq, PartialEq, Hash, Clone, Copy)]
 struct HousePosition {
@@ -55,14 +62,15 @@ fn houses_visited_by_robo_santa(input: &String) -> usize {
     return visited_houses.len();
 }
 
-impl DaySolution for Day3 {
+impl Day for Day3 {
     fn get_year(&self) -> usize {
         return 2015;
     }
     fn get_day(&self) -> usize {
         return 3;
     }
-
+}
+impl Solution for Day3 {
     fn part1(&mut self) -> PartResult {
         let input = self.get_input(None);
         let lines = aoc::parse_input_lines::<String>(&input).unwrap();
@@ -83,6 +91,8 @@ impl DaySolution for Day3 {
             .collect());
     }
 }
+
+impl DaySolution for Day3 {}
 
 #[cfg(test)]
 mod tests {

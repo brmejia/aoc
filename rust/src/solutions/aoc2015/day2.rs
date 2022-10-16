@@ -1,8 +1,15 @@
 use std::{fmt::Display, str::FromStr};
 
-use super::{DaySolution, PartResult};
+use crate::solutions::{Day, DaySolution, PartResult, Solution};
 
+#[derive(Debug)]
 pub struct Day2 {}
+
+impl Day2 {
+    pub fn new() -> Self {
+        return Self {};
+    }
+}
 
 #[derive(Debug)]
 struct Package {
@@ -33,18 +40,19 @@ impl<T: FromStr + Display> From<T> for Package {
             .try_into()
             .expect(format!("Error parsing package: {}", string_like).as_str());
 
-        Package::new(l, w, h)
+        Self::new(l, w, h)
     }
 }
 
-impl DaySolution for Day2 {
+impl Day for Day2 {
     fn get_year(&self) -> usize {
         return 2015;
     }
     fn get_day(&self) -> usize {
         return 2;
     }
-
+}
+impl Solution for Day2 {
     fn part1(&mut self) -> PartResult {
         let input = self.get_input(None);
         let lines = aoc::parse_input_lines::<String>(&input).unwrap();
@@ -73,6 +81,8 @@ impl DaySolution for Day2 {
         return Ok(vec![total_ribon.to_string()]);
     }
 }
+
+impl DaySolution for Day2 {}
 
 #[cfg(test)]
 mod tests {
