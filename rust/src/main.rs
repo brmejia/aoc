@@ -1,3 +1,5 @@
+extern crate nalgebra as na;
+
 mod solutions;
 
 use clap::Parser;

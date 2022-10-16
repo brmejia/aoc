@@ -55,7 +55,6 @@ pub trait DaySolution: Day + Solution + Debug {
             println!("{}{}", " ".repeat(indent_size), &line);
         }
     }
-
     fn run(&mut self) {
         println!("---- {} ----", self.get_name());
 

@@ -1,6 +1,6 @@
 use anyhow::Result;
 use itertools::Itertools;
-use na::{DMatrix, Matrix};
+use na::DMatrix;
 use regex::Regex;
 use std::{ops::Add, str::FromStr};
 
@@ -108,7 +108,7 @@ impl FromStr for Cmd {
 
 #[derive(Debug)]
 struct Grid {
-    grid: DMatrix<usize>,
+    grid: DMatrix<isize>,
 }
 
 impl Grid {
@@ -116,16 +116,26 @@ impl Grid {
         let grid = DMatrix::zeros(shape.0 as usize, shape.1 as usize);
         Self { grid }
     }
-    fn set_value(&mut self, pos1: Position, pos2: Position, value: usize) {
-        let slice_shape: (usize, usize) = (
+    fn get_slice_shape(&mut self, pos1: &Position, pos2: &Position) -> (usize, usize) {
+        return (
             pos1.0.abs_diff(pos2.0).add(1).into(),
             pos1.1.abs_diff(pos2.1).add(1).into(),
         );
-        dbg!(slice_shape);
+    }
+    fn set_value(&mut self, pos1: Position, pos2: Position, value: isize) {
+        let slice_shape = self.get_slice_shape(&pos1, &pos2);
         let mut target = self.grid.slice_mut(pos1.into(), slice_shape);
 
         for mut row in target.row_iter_mut() {
             row.fill(value);
+        }
+    }
+    fn add_scalar_mut(&mut self, pos1: Position, pos2: Position, value: isize) {
+        let slice_shape = self.get_slice_shape(&pos1, &pos2);
+        let mut target = self.grid.slice_mut(pos1.into(), slice_shape);
+
+        for row in target.row_iter_mut() {
+            row.apply_into(|x| *x = 0.max(*x + value));
         }
     }
     pub fn turn_on(&mut self, pos1: Position, pos2: Position) {
@@ -135,10 +145,7 @@ impl Grid {
         self.set_value(pos1, pos2, 0)
     }
     pub fn toggle(&mut self, pos1: Position, pos2: Position) {
-        let slice_shape: (usize, usize) = (
-            pos1.0.abs_diff(pos2.0).add(1).into(),
-            pos1.1.abs_diff(pos2.1).add(1).into(),
-        );
+        let slice_shape = self.get_slice_shape(&pos1, &pos2);
         let mut target = self.grid.slice_mut(pos1.into(), slice_shape);
 
         target.apply(|x| {
@@ -149,16 +156,23 @@ impl Grid {
             }
         });
     }
-
-    pub fn process_cmd(&mut self, cmd: &Cmd) {
+    pub fn translate_cmd_1(&mut self, cmd: &Cmd) {
         match cmd.action {
             Action::Toggle => self.toggle(cmd.position_1.clone(), cmd.position_2.clone()),
             Action::On => self.turn_on(cmd.position_1.clone(), cmd.position_2.clone()),
             Action::Off => self.turn_off(cmd.position_1.clone(), cmd.position_2.clone()),
         }
     }
-
-    pub fn sum(&self) -> usize {
+    pub fn translate_cmd_2(&mut self, cmd: &Cmd) {
+        match cmd.action {
+            Action::Toggle => {
+                self.add_scalar_mut(cmd.position_1.clone(), cmd.position_2.clone(), 2)
+            }
+            Action::On => self.add_scalar_mut(cmd.position_1.clone(), cmd.position_2.clone(), 1),
+            Action::Off => self.add_scalar_mut(cmd.position_1.clone(), cmd.position_2.clone(), -1),
+        }
+    }
+    pub fn sum(&self) -> isize {
         self.grid.sum()
     }
 }
@@ -170,12 +184,12 @@ impl Solution for Day6 {
 
         let mut grid = Grid::new((1000, 1000));
 
-        lines //[..100]
+        lines
             .iter()
             .filter(|line| !line.is_empty())
             .map(|line| {
                 let cmd = Cmd::from_str(line).unwrap();
-                grid.process_cmd(&cmd);
+                grid.translate_cmd_1(&cmd);
             })
             .collect_vec();
 
@@ -184,11 +198,20 @@ impl Solution for Day6 {
 
     fn part2(&mut self) -> PartResult {
         let input = self.get_input(None);
-        let _lines = aoc::parse_input_lines::<String>(&input).unwrap();
+        let lines = aoc::parse_input_lines::<String>(&input).unwrap();
 
-        // Write here your solution
+        let mut grid = Grid::new((1000, 1000));
 
-        return Ok(vec!["Incomplete".to_string()]);
+        lines
+            .iter()
+            .filter(|line| !line.is_empty())
+            .map(|line| {
+                let cmd = Cmd::from_str(line).unwrap();
+                grid.translate_cmd_2(&cmd);
+            })
+            .collect_vec();
+
+        return Ok(vec![grid.sum().to_string()]);
     }
 }
 
@@ -266,14 +289,13 @@ mod tests {
         assert_eq!(grid.sum() as usize, grid.grid.len());
     }
     #[test]
-    fn test_commands() {
+    fn test_commands_translation_1() {
         let nrows = 1000;
         let ncols = 1000;
         let mut grid = Grid::new((nrows, ncols));
         let on_cmd =
             Cmd::from_str(format!("turn on 0,0 through {},{}", nrows - 1, ncols - 1).as_str())
                 .unwrap();
-        dbg!(&on_cmd);
         let off_cmd =
             Cmd::from_str(format!("turn off 0,0 through {},{}", nrows - 1, ncols - 1).as_str())
                 .unwrap();
@@ -290,43 +312,53 @@ mod tests {
         .unwrap();
 
         // Test ON commands
-        grid.process_cmd(&on_cmd);
+        grid.translate_cmd_1(&on_cmd);
         assert_eq!(grid.sum() as usize, grid.grid.len());
-        grid.process_cmd(&on_cmd);
+        grid.translate_cmd_1(&on_cmd);
         assert_eq!(grid.sum() as usize, grid.grid.len());
 
         // Test OFF commands
-        grid.process_cmd(&off_cmd);
+        grid.translate_cmd_1(&off_cmd);
         assert_eq!(grid.sum() as usize, 0);
-        grid.process_cmd(&off_cmd);
+        grid.translate_cmd_1(&off_cmd);
         assert_eq!(grid.sum() as usize, 0);
 
         // Test TOGGLE commands
-        grid.process_cmd(&toggle_cmd);
+        grid.translate_cmd_1(&toggle_cmd);
         assert_eq!(grid.sum() as usize, 4);
-        grid.process_cmd(&toggle_cmd);
+        grid.translate_cmd_1(&toggle_cmd);
         assert_eq!(grid.sum() as usize, 0);
     }
-    // #[test]
-    // fn test_turn_off_commands() {
-    //     let mut grid = Grid::new((5, 10));
-    //     let cmd = Cmd::from_str("turn off 0,0 through 4,9").unwrap();
 
-    //     grid.process_cmd(&cmd);
-    //     assert_eq!(grid.sum() as usize, 0);
-    //     grid.grid.fill(1);
-    //     grid.process_cmd(&cmd);
-    //     assert_eq!(grid.sum() as usize, 0);
-    // }
-    // #[test]
-    // fn test_turn_toggle_commands() {
-    //     let mut grid = Grid::new((5, 10));
-    //     let cmd = Cmd::from_str("toggle 0,0 through 4,9").unwrap();
+    #[test]
+    fn test_commands_translation_2() {
+        let nrows = 1000;
+        let ncols = 1000;
+        let mut grid = Grid::new((nrows, ncols));
+        let on_cmd = Cmd::from_str(format!("turn on 0,0 through 0,0").as_str()).unwrap();
+        let off_cmd = Cmd::from_str(format!("turn off 0,0 through 0,0").as_str()).unwrap();
+        let toggle_cmd =
+            Cmd::from_str(format!("toggle 0,0 through {},{}", nrows - 1, ncols - 1).as_str())
+                .unwrap();
 
-    //     grid.process_cmd(&cmd);
-    //     assert_eq!(grid.sum() as usize, 0);
-    //     grid.grid.fill(1);
-    //     grid.process_cmd(&cmd);
-    //     assert_eq!(grid.sum() as usize, 0);
-    // }
+        // Test ON commands
+        grid.translate_cmd_2(&on_cmd);
+        assert_eq!(grid.sum() as usize, 1);
+        // Test OFF commands
+        grid.translate_cmd_2(&off_cmd);
+        assert_eq!(grid.sum() as usize, 0);
+        grid.translate_cmd_2(&off_cmd);
+        assert_eq!(grid.sum() as usize, 0);
+        // Test ON commands
+        grid.translate_cmd_2(&on_cmd);
+        assert_eq!(grid.sum() as usize, 1);
+        // Test OFF commands
+        grid.translate_cmd_2(&off_cmd);
+        assert_eq!(grid.sum() as usize, 0);
+        // Test TOGGLE commands
+        grid.translate_cmd_2(&toggle_cmd);
+        assert_eq!(grid.sum() as usize, 2000000);
+        grid.translate_cmd_2(&toggle_cmd);
+        assert_eq!(grid.sum() as usize, 4000000);
+    }
 }
