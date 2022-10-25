@@ -3,7 +3,7 @@ from base import read_input
 
 
 def main():
-    input = read_input(1)[0]  # Get first line
+    input = read_input(2015, 1)[0]  # Get first line
     ups = input.count("(")
     downs = input.count(")")
 

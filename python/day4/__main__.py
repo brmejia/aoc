@@ -20,7 +20,7 @@ def find_hash_integer(input: str, difficulty: int) -> int:
 
 def main():
 
-    input_lines = read_input(4)
+    input_lines = read_input(2015, 4)
     input = input_lines[0]
 
     difficulty = 5

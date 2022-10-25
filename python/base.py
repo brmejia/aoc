@@ -1,7 +1,7 @@
 
 
-def read_input(day: int):
-    with open(f"../inputs/day{day}.txt") as f:
+def read_input(year: int, day: int):
+    with open(f"../inputs/{year}/day{day}.txt") as f:
         lines = f.read().splitlines()
 
     return lines
