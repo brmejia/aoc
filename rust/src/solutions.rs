@@ -20,24 +20,25 @@ type PartResult = Result<Vec<String>>;
 pub trait Day {
     fn get_year(&self) -> usize;
     fn get_day(&self) -> usize;
-}
-
-pub trait Solution: Day {
     fn get_name(&self) -> String {
         return format!("{} Day {}", self.get_year(), self.get_day());
     }
+}
 
-    fn get_input_path(&self) -> String {
-        let mut input_path = INPUT_BASE_PATH.to_string();
-        input_path.push_str(&format!("{}/day{}.txt", self.get_year(), self.get_day()));
-        return input_path;
-    }
+pub fn get_input_path(year: u16, day: u8) -> String {
+    let mut input_path = INPUT_BASE_PATH.to_string();
+    input_path.push_str(&format!("{}/day{}.txt", year, day));
+    return input_path;
+}
+pub fn get_problem_input(year: u16, day: u8) -> Option<String> {
+    let input_path = get_input_path(year, day);
+    let input = fs::read_to_string(input_path).expect("Unable to read input file");
+    return Some(input);
+}
 
+pub trait Solution: Day {
     fn get_input(&self, input_path: Option<&String>) -> String {
-        let input_path = input_path.unwrap_or(&self.get_input_path()).to_owned();
-
-        let input = fs::read_to_string(input_path).expect("Unable to read input file");
-        return input;
+        return get_problem_input(self.get_year() as u16, self.get_day() as u8).unwrap();
     }
 
     fn part1(&mut self) -> PartResult;

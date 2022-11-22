@@ -17,10 +17,10 @@ impl Day6 {
 
 impl Day for Day6 {
     fn get_year(&self) -> usize {
-        return 2015;
+        2015
     }
     fn get_day(&self) -> usize {
-        return 6;
+        6
     }
 }
 
@@ -38,7 +38,7 @@ impl FromStr for Position {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let [x, y]: [usize; 2] = s
-            .split(",")
+            .split(',')
             .map(|p| p.parse().unwrap())
             .collect_vec()
             .try_into()
@@ -48,9 +48,9 @@ impl FromStr for Position {
     }
 }
 
-impl Into<(usize, usize)> for Position {
-    fn into(self) -> (usize, usize) {
-        (self.0 as usize, self.1 as usize)
+impl From<Position> for (usize, usize) {
+    fn from(val: Position) -> Self {
+        (val.0 as usize, val.1 as usize)
     }
 }
 
@@ -117,10 +117,10 @@ impl Grid {
         Self { grid }
     }
     fn get_slice_shape(&mut self, pos1: &Position, pos2: &Position) -> (usize, usize) {
-        return (
-            pos1.0.abs_diff(pos2.0).add(1).into(),
-            pos1.1.abs_diff(pos2.1).add(1).into(),
-        );
+        (
+            pos1.0.abs_diff(pos2.0).add(1),
+            pos1.1.abs_diff(pos2.1).add(1),
+        )
     }
     fn set_value(&mut self, pos1: Position, pos2: Position, value: isize) {
         let slice_shape = self.get_slice_shape(&pos1, &pos2);
@@ -193,7 +193,7 @@ impl Solution for Day6 {
             })
             .collect_vec();
 
-        return Ok(vec![grid.sum().to_string()]);
+        Ok(vec![grid.sum().to_string()])
     }
 
     fn part2(&mut self) -> PartResult {
@@ -211,7 +211,7 @@ impl Solution for Day6 {
             })
             .collect_vec();
 
-        return Ok(vec![grid.sum().to_string()]);
+        Ok(vec![grid.sum().to_string()])
     }
 }
 
@@ -335,8 +335,8 @@ mod tests {
         let nrows = 1000;
         let ncols = 1000;
         let mut grid = Grid::new((nrows, ncols));
-        let on_cmd = Cmd::from_str(format!("turn on 0,0 through 0,0").as_str()).unwrap();
-        let off_cmd = Cmd::from_str(format!("turn off 0,0 through 0,0").as_str()).unwrap();
+        let on_cmd = Cmd::from_str("turn on 0,0 through 0,0".to_string().as_str()).unwrap();
+        let off_cmd = Cmd::from_str("turn off 0,0 through 0,0".to_string().as_str()).unwrap();
         let toggle_cmd =
             Cmd::from_str(format!("toggle 0,0 through {},{}", nrows - 1, ncols - 1).as_str())
                 .unwrap();

@@ -16,4 +16,6 @@ itertools = "0.10.5"
 md5 = "0.7.0"
 nalgebra = "0.31.2"
 regex = "1.6.0"
+strum = "0.24.1"
+strum_macros = "0.24.3"
 

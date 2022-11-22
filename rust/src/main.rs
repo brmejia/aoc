@@ -14,7 +14,6 @@ struct Cli {
 fn main() {
     let cli = Cli::parse();
     let selected_day = solutions::get_solution(cli.year, cli.day);
-    println!("{:?}", selected_day);
 
     for mut sol in selected_day.into_iter() {
         sol.run()
