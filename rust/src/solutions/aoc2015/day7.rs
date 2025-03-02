@@ -70,10 +70,10 @@ impl FromStr for Connection {
                         let in2 = inputs.remove("in2").unwrap();
                         match (&op, in2) {
                             (Operation::LShift(_), Input::Value(val)) => {
-                                Operation::LShift(val as u16)
+                                Operation::LShift(val)
                             }
                             (Operation::RShift(_), Input::Value(val)) => {
-                                Operation::RShift(val as u16)
+                                Operation::RShift(val)
                             }
                             (Operation::RShift(_) | Operation::LShift(_), Input::Signal(_)) => {
                                 panic!(

@@ -50,7 +50,7 @@ impl FromStr for Position {
 
 impl From<Position> for (usize, usize) {
     fn from(val: Position) -> Self {
-        (val.0 as usize, val.1 as usize)
+        (val.0, val.1)
     }
 }
 
@@ -113,7 +113,7 @@ struct Grid {
 
 impl Grid {
     pub fn new(shape: (usize, usize)) -> Self {
-        let grid = DMatrix::zeros(shape.0 as usize, shape.1 as usize);
+        let grid = DMatrix::zeros(shape.0, shape.1);
         Self { grid }
     }
     fn get_slice_shape(&mut self, pos1: &Position, pos2: &Position) -> (usize, usize) {
@@ -122,9 +122,10 @@ impl Grid {
             pos1.1.abs_diff(pos2.1).add(1),
         )
     }
-    fn set_value(&mut self, pos1: Position, pos2: Position, value: isize) {
-        let slice_shape = self.get_slice_shape(&pos1, &pos2);
-        let mut target = self.grid.slice_mut(pos1.into(), slice_shape);
+    fn set_value(&mut self, pos1: impl Into<Position>, pos2: impl Into<Position>, value: isize) {
+        let p1: Position = pos1.into();
+        let slice_shape = self.get_slice_shape(&p1, &pos2.into());
+        let mut target = self.grid.view_mut(p1.into(), slice_shape);
 
         for mut row in target.row_iter_mut() {
             row.fill(value);
@@ -132,21 +133,23 @@ impl Grid {
     }
     fn add_scalar_mut(&mut self, pos1: Position, pos2: Position, value: isize) {
         let slice_shape = self.get_slice_shape(&pos1, &pos2);
-        let mut target = self.grid.slice_mut(pos1.into(), slice_shape);
+        let mut target = self.grid.view_mut(pos1.into(), slice_shape);
 
         for row in target.row_iter_mut() {
             row.apply_into(|x| *x = 0.max(*x + value));
         }
     }
-    pub fn turn_on(&mut self, pos1: Position, pos2: Position) {
+
+    pub fn turn_on(&mut self, pos1: impl Into<Position>, pos2: impl Into<Position>) {
         self.set_value(pos1, pos2, 1)
     }
-    pub fn turn_off(&mut self, pos1: Position, pos2: Position) {
+
+    pub fn turn_off(&mut self, pos1: impl Into<Position>, pos2: impl Into<Position>) {
         self.set_value(pos1, pos2, 0)
     }
     pub fn toggle(&mut self, pos1: Position, pos2: Position) {
         let slice_shape = self.get_slice_shape(&pos1, &pos2);
-        let mut target = self.grid.slice_mut(pos1.into(), slice_shape);
+        let mut target = self.grid.view_mut(pos1.into(), slice_shape);
 
         target.apply(|x| {
             *x = match x {
@@ -262,7 +265,7 @@ mod tests {
         let mut grid = Grid::new(shape);
         grid.grid.fill(0);
 
-        grid.turn_on((0, 0).into(), (2, 2).into());
+        grid.turn_on((0, 0), (2, 2));
         assert_eq!(grid.sum() as usize, grid.grid.len())
     }
     #[test]
@@ -270,7 +273,7 @@ mod tests {
         let shape = (3, 3);
         let mut grid = Grid::new(shape);
         grid.grid.fill(1);
-        grid.turn_off((0, 0).into(), (2, 2).into());
+        grid.turn_off((0, 0), (2, 2));
 
         assert_eq!(grid.sum(), 0)
     }
