@@ -7,7 +7,7 @@ use regex::Regex;
 use std::str::FromStr;
 use strum_macros::EnumString;
 
-use crate::solutions::{get_problem_input, Day, DaySolution, PartResult, Solution};
+use crate::solutions::{Day, DaySolution, PartResult, Solution, get_problem_input};
 
 #[derive(Debug, PartialEq, Eq, Hash)]
 enum Input {
@@ -69,16 +69,12 @@ impl FromStr for Connection {
                     Operation::LShift(_) | Operation::RShift(_) => {
                         let in2 = inputs.remove("in2").unwrap();
                         match (&op, in2) {
-                            (Operation::LShift(_), Input::Value(val)) => {
-                                Operation::LShift(val)
-                            }
-                            (Operation::RShift(_), Input::Value(val)) => {
-                                Operation::RShift(val)
-                            }
+                            (Operation::LShift(_), Input::Value(val)) => Operation::LShift(val),
+                            (Operation::RShift(_), Input::Value(val)) => Operation::RShift(val),
                             (Operation::RShift(_) | Operation::LShift(_), Input::Signal(_)) => {
                                 panic!(
-                                "Input 2 must be parseable as u16 if action is LShift or RShift."
-                            )
+                                    "Input 2 must be parseable as u16 if action is LShift or RShift."
+                                )
                             }
                             _ => op,
                         }

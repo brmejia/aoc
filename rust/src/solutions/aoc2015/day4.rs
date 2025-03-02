@@ -11,9 +11,9 @@ pub struct Day4 {
 
 impl Day4 {
     pub fn new() -> Self {
-        return Self {
+        Self {
             hashes: HashMap::default(),
-        };
+        }
     }
 }
 
@@ -28,7 +28,7 @@ impl Day4 {
         }
 
         let max_difficulty = match &self.hashes.keys().filter(|&k| k <= difficulty).max() {
-            Some(&v) => v,
+            &Some(&v) => v,
             None => 1,
         };
 
@@ -50,16 +50,16 @@ impl Day4 {
         }
         self.hashes.insert(*difficulty, current_lower);
 
-        return current_lower;
+        current_lower
     }
 }
 
 impl Day for Day4 {
     fn get_year(&self) -> usize {
-        return 2015;
+        2015
     }
     fn get_day(&self) -> usize {
-        return 4;
+        4
     }
 }
 
