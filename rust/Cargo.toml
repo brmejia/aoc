@@ -10,9 +10,10 @@ name = "aoc"
 path = "src/lib.rs"
 
 [dependencies]
-anyhow = "1.0.96"
+anyhow = "1.0.97"
 clap = { version = "4.5.31", features = ["derive"] }
 itertools = "0.14.0"
+lazy_static = "1.5.0"
 md5 = "0.7.0"
 nalgebra = "0.33.2"
 regex = "1.11.1"
