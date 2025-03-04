@@ -1,5 +1,5 @@
 use anyhow::Result;
-use std::str::FromStr;
+use std::{fs, path::Path, str::FromStr};
 
 pub fn parse_input_lines<T: FromStr>(input: &str) -> Result<Vec<T>> {
     Ok(input
@@ -13,4 +13,10 @@ pub fn split_line<T: FromStr>(line: &str, sep: char) -> Result<Vec<T>> {
         .split(sep)
         .filter_map(|c| c.parse().ok())
         .collect::<Vec<T>>())
+}
+
+pub fn parse_file_lines<T: FromStr>(file_path: impl AsRef<Path>) -> Result<Vec<T>> {
+    let file_content = fs::read_to_string(&file_path)?;
+
+    parse_input_lines(&file_content)
 }

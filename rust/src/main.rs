@@ -13,7 +13,7 @@ struct Cli {
 
 fn main() {
     let cli = Cli::parse();
-    let selected_day = solutions::get_solution(cli.year, cli.day);
+    let selected_day = solutions::get_solutions(cli.year, cli.day);
 
     for mut sol in selected_day.into_iter() {
         sol.run()

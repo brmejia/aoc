@@ -4,7 +4,7 @@ use anyhow::Result;
 use core::fmt::Debug;
 use std::{fs, time::Instant};
 
-pub fn get_solution(year: u16, day: Option<u16>) -> Vec<Box<dyn DaySolution>> {
+pub fn get_solutions(year: u16, day: Option<u16>) -> Vec<Box<dyn DaySolution>> {
     match year {
         2015 => aoc2015::get_solutions(day),
         _ => panic!("Advent of Code {} is not already implemented", year),
