@@ -1,13 +1,16 @@
-use itertools::Itertools;
-use std::collections::BTreeMap;
+// use itertools::Itertools;
+// use std::collections::BTreeMap;
 
-pub mod day1;
-pub mod day2;
-pub mod day3;
-pub mod day4;
-pub mod day5;
-pub mod day6;
-pub mod day7;
+use anyhow::Result;
+
+mod day1;
+mod day2;
+mod day3;
+mod day4;
+mod day5;
+mod day6;
+mod day7;
+mod day8;
 
 use day1::Day1;
 use day2::Day2;
@@ -16,26 +19,37 @@ use day4::Day4;
 use day5::Day5;
 use day6::Day6;
 use day7::Day7;
+use day8::Day8;
 
 use super::DaySolution;
 
-pub fn get_solutions(day: Option<u16>) -> Vec<Box<dyn DaySolution>> {
-    let mut days: BTreeMap<u16, Box<dyn DaySolution>> = BTreeMap::new();
-    days.insert(1, Box::new(Day1::new()));
-    days.insert(2, Box::new(Day2::new()));
-    days.insert(3, Box::new(Day3::new()));
-    days.insert(4, Box::new(Day4::new()));
-    days.insert(5, Box::new(Day5::new()));
-    days.insert(6, Box::new(Day6::new()));
-    days.insert(7, Box::new(Day7::new()));
+const UPPER_DAYS_LIMIT: u8 = 9;
 
+pub fn get_day_solution(day: u8) -> Result<Option<Box<dyn DaySolution>>> {
+    let day_solution: Option<Box<dyn DaySolution>> = match day {
+        1 => Some(Box::new(Day1::new())),
+        2 => Some(Box::new(Day2::new())),
+        3 => Some(Box::new(Day3::new())),
+        4 => Some(Box::new(Day4::new())),
+        5 => Some(Box::new(Day5::new())),
+        6 => Some(Box::new(Day6::new())),
+        7 => Some(Box::new(Day7::new())),
+        8 => Some(Box::new(Day8::new())),
+        UPPER_DAYS_LIMIT..=24 => None,
+        0 | 25.. => panic!("Day {:?} is non in Advent of Code", day),
+    };
+    Ok(day_solution)
+}
+
+pub fn get_solutions(day: Option<u8>) -> Result<Vec<Option<Box<dyn DaySolution>>>> {
     match day {
-        Some(day) => {
-            let selected_day = days
-                .remove(&day)
-                .unwrap_or_else(|| panic!("Day {day} of 2015 is not implemented yet"));
-            vec![selected_day]
+        Some(d) => {
+            let day_solution = get_day_solution(d)?;
+            Ok(vec![day_solution])
         }
-        _ => days.into_values().collect_vec(),
+        _ => Ok((1..UPPER_DAYS_LIMIT)
+            .flat_map(|d| get_solutions(d.into()))
+            .flatten()
+            .collect()),
     }
 }

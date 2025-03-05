@@ -1,12 +1,19 @@
 pub mod aoc2015;
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 use core::fmt::Debug;
 use std::{fs, time::Instant};
 
-pub fn get_solutions(year: u16, day: Option<u16>) -> Vec<Box<dyn DaySolution>> {
+pub fn get_day_solution(year: u16, day: u8) -> Option<Box<dyn DaySolution>> {
     match year {
-        2015 => aoc2015::get_solutions(day),
+        2015 => aoc2015::get_day_solution(day).unwrap(),
+        _ => panic!("Advent of Code {} is not already implemented", year),
+    }
+}
+
+pub fn get_solutions(year: u16, day: Option<u8>) -> Vec<Option<Box<dyn DaySolution>>> {
+    match year {
+        2015 => aoc2015::get_solutions(day).unwrap(),
         _ => panic!("Advent of Code {} is not already implemented", year),
     }
 }
@@ -23,20 +30,20 @@ pub trait Day {
     }
 }
 
-pub fn get_input_path(year: u16, day: u8) -> String {
+pub fn get_default_input_path(year: u16, day: u8) -> String {
     let mut input_path = INPUT_BASE_PATH.to_string();
     input_path.push_str(&format!("{}/day{}.txt", year, day));
     input_path
 }
-pub fn get_problem_input(year: u16, day: u8) -> Option<String> {
-    let input_path = get_input_path(year, day);
-    let input = fs::read_to_string(input_path).expect("Unable to read input file");
-    Some(input)
+pub fn get_problem_input(year: u16, day: u8) -> Result<String> {
+    let input_path = get_default_input_path(year, day);
+    let input = fs::read_to_string(input_path).context("Unable to read input file")?;
+    Ok(input)
 }
 
 pub trait Solution: Day {
-    fn get_input(&self, _input_path: Option<&String>) -> String {
-        get_problem_input(self.get_year() as u16, self.get_day() as u8).unwrap()
+    fn get_input(&self, _input_path: Option<&String>) -> Result<String> {
+        get_problem_input(self.get_year() as u16, self.get_day() as u8)
     }
 
     fn part1(&mut self) -> PartResult;
