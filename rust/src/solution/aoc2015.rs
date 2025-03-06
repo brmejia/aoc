@@ -27,6 +27,7 @@ use super::{
 };
 
 const UPPER_DAYS_LIMIT: u8 = 9;
+
 /// Get the solution for the day
 ///
 /// # Errors
@@ -55,4 +56,22 @@ pub fn get_solutions() -> HashMap<u8, Result<Box<dyn DaySolution>>> {
         solutions.insert(day, try_get_day_solution(day));
     }
     solutions
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_invalid_days() {
+        let days = [0, 25, 200];
+        for d in days {
+            match try_get_day_solution(d) {
+                Err(SolutionError::InvalidDay { day: _d }) => {
+                    assert_eq!(d, _d)
+                }
+                _ => panic!("Should have been InvalidDay {{ day: {d} }} error"),
+            };
+        }
+    }
 }
