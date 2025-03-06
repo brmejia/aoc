@@ -1,4 +1,7 @@
-use crate::solutions::{Day, DaySolution, PartResult, Solution};
+use crate::{
+    input,
+    solution::{Day, DaySolution, PartResult, Solution},
+};
 use itertools::Itertools;
 
 #[derive(Debug)]
@@ -56,8 +59,8 @@ impl Day for Day5 {
 }
 impl Solution for Day5 {
     fn part1(&mut self) -> PartResult {
-        let input = self.get_input(None);
-        let lines = aoc::parse_input_lines::<String>(&input).unwrap();
+        let input = self.get_input(None)?;
+        let lines = input::parse_input_lines::<String>(&input).unwrap();
 
         let nice_words: usize = lines.iter().filter(|line| is_nice(line)).count();
 
@@ -65,8 +68,8 @@ impl Solution for Day5 {
     }
 
     fn part2(&mut self) -> PartResult {
-        let input = self.get_input(None);
-        let lines = aoc::parse_input_lines::<String>(&input).unwrap();
+        let input = self.get_input(None)?;
+        let lines = input::parse_input_lines::<String>(&input).unwrap();
 
         let super_nice_words: usize = lines.iter().filter(|line| is_super_nice(line)).count();
 

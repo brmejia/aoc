@@ -1,6 +1,9 @@
 use std::{fmt::Display, str::FromStr};
 
-use crate::solutions::{Day, DaySolution, PartResult, Solution};
+use crate::{
+    input,
+    solution::{Day, DaySolution, PartResult, Solution},
+};
 
 #[derive(Debug)]
 pub struct Day2 {}
@@ -35,7 +38,7 @@ impl Package {
 
 impl<T: FromStr + Display> From<T> for Package {
     fn from(string_like: T) -> Self {
-        let [l, w, h]: [usize; 3] = aoc::split_line::<usize>(&string_like.to_string(), 'x')
+        let [l, w, h]: [usize; 3] = input::split_line::<usize>(&string_like.to_string(), 'x')
             .unwrap()
             .try_into()
             .expect(format!("Error parsing package: {}", string_like).as_str());
@@ -54,8 +57,8 @@ impl Day for Day2 {
 }
 impl Solution for Day2 {
     fn part1(&mut self) -> PartResult {
-        let input = self.get_input(None);
-        let lines = aoc::parse_input_lines::<String>(&input).unwrap();
+        let input = self.get_input(None)?;
+        let lines = input::parse_input_lines::<String>(&input).unwrap();
 
         let packages: Vec<Package> = lines.into_iter().map(|line| Package::from(line)).collect();
 
@@ -68,8 +71,8 @@ impl Solution for Day2 {
     }
 
     fn part2(&mut self) -> PartResult {
-        let input = self.get_input(None);
-        let lines = aoc::parse_input_lines::<String>(&input).unwrap();
+        let input = self.get_input(None)?;
+        let lines = input::parse_input_lines::<String>(&input).unwrap();
 
         let packages: Vec<Package> = lines.into_iter().map(|line| Package::from(line)).collect();
 

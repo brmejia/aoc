@@ -4,7 +4,10 @@ use na::DMatrix;
 use regex::Regex;
 use std::{ops::Add, str::FromStr};
 
-use crate::solutions::{Day, DaySolution, PartResult, Solution};
+use crate::{
+    input,
+    solution::{Day, DaySolution, PartResult, Solution},
+};
 
 #[derive(Debug)]
 pub struct Day6 {}
@@ -182,8 +185,8 @@ impl Grid {
 
 impl Solution for Day6 {
     fn part1(&mut self) -> PartResult {
-        let input = self.get_input(None);
-        let lines = aoc::parse_input_lines::<String>(&input).unwrap();
+        let input = self.get_input(None)?;
+        let lines = input::parse_input_lines::<String>(&input).unwrap();
 
         let mut grid = Grid::new((1000, 1000));
 
@@ -200,8 +203,8 @@ impl Solution for Day6 {
     }
 
     fn part2(&mut self) -> PartResult {
-        let input = self.get_input(None);
-        let lines = aoc::parse_input_lines::<String>(&input).unwrap();
+        let input = self.get_input(None)?;
+        let lines = input::parse_input_lines::<String>(&input).unwrap();
 
         let mut grid = Grid::new((1000, 1000));
 

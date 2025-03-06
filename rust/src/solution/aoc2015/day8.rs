@@ -1,0 +1,258 @@
+use std::collections::VecDeque;
+
+use crate::{
+    input,
+    solution::{Day, DaySolution, PartResult, Solution, get_default_input_path},
+};
+use lazy_static::lazy_static;
+use regex::Regex;
+
+#[derive(Debug)]
+pub struct Day8 {
+    pub year: u16,
+    pub day: u8,
+    input_lines: Vec<String>,
+}
+
+impl Day8 {
+    pub fn new() -> Self {
+        let (year, day) = (2015, 8);
+        let input_lines = input::parse_file_lines(get_default_input_path(year, day));
+
+        Self {
+            year,
+            day,
+            input_lines: input_lines.unwrap(),
+        }
+    }
+
+    fn count_hex(input: &str) -> (usize, String) {
+        lazy_static! {
+            // static ref HEX_RE: Regex = Regex::new(r"\\x\d{2}").unwrap();
+            static ref HEX_RE: Regex = Regex::new(r"\\x[a-fA-F0-9]{2}").unwrap();
+        }
+        let count = HEX_RE.captures_iter(input).count();
+        (count, HEX_RE.replace_all(input, "").to_string())
+    }
+
+    fn count_quotes(input: &str) -> (usize, String) {
+        lazy_static! {
+            static ref START_DQUOTE_RE: Regex = Regex::new(r#"^["]"#).unwrap();
+            static ref END_DQUOTE_RE: Regex = Regex::new(r#"["]$"#).unwrap();
+            static ref DQUOTE_RE: Regex = Regex::new(r#"\\""#).unwrap();
+        }
+        let _start = START_DQUOTE_RE.captures_iter(input).count();
+        let input = START_DQUOTE_RE.replace_all(input, "").to_string();
+
+        let _end = END_DQUOTE_RE.captures_iter(&input).count();
+        let input = END_DQUOTE_RE.replace_all(&input, "").to_string();
+
+        let quotes_count = DQUOTE_RE.captures_iter(&input).count();
+        let input = DQUOTE_RE.replace_all(&input, "").to_string();
+
+        (quotes_count, input)
+    }
+    fn count_backslashes(input: &str) -> (usize, String) {
+        // lazy_static! {
+        //     static ref BSLASH_RE: Regex = Regex::new(r#"\\"#).unwrap();
+        // }
+        // let count = BSLASH_RE
+        //     .captures_iter(input)
+        //     // .map(|c| {
+        //     //     dbg!(&c);
+        //     //     dbg!(&c.len());
+        //     //     c.len()
+        //     // })
+        //     .count();
+        // let input = BSLASH_RE.replace_all(input, "").to_string();
+
+        let count = input.matches(r"\\").count();
+        // dbg!(count);
+        let input = input.replacen(r"\\", r"", count);
+
+        (count, input)
+    }
+
+    pub fn count_chars_in_str(input: &str) -> (usize, usize) {
+        let initial_len = input.len();
+        // dbg!(&input);
+        // dbg!(&initial_len);
+
+        let (bslashes_count, input) = Self::count_backslashes(input);
+        // dbg!(&bslashes_count);
+        // dbg!(&input);
+
+        let (hex_count, input) = Self::count_hex(&input);
+        // dbg!(&hex_count);
+        // dbg!(&input);
+
+        let (quotes_count, input) = Self::count_quotes(&input);
+        // dbg!(&quotes_count);
+        // dbg!(&input);
+
+        let total_count = hex_count + quotes_count + bslashes_count + input.len();
+        (initial_len, total_count)
+        // (initial_len, input.len())
+    }
+
+    pub fn part_1(input_lines: &[String]) -> usize {
+        input_lines
+            .iter()
+            .map(|s| s.as_str())
+            .map(Day8::count_chars_in_str)
+            .fold(0, |acc, x| acc + (x.0 - x.1))
+    }
+}
+
+impl Day for Day8 {
+    fn get_year(&self) -> usize {
+        self.year.into()
+    }
+    fn get_day(&self) -> usize {
+        self.day.into()
+    }
+}
+
+impl Solution for Day8 {
+    fn part1(&mut self) -> PartResult {
+        let counts = Self::part_1(&self.input_lines);
+
+        Ok(vec![counts.to_string()])
+    }
+
+    fn part2(&mut self) -> PartResult {
+        // Write here your solution
+
+        Ok(vec!["Incomplete".to_string()])
+    }
+}
+
+impl DaySolution for Day8 {}
+
+enum EscapedState {
+    None,
+    Quote,
+    Hex(isize),
+}
+
+pub fn part_a(input: &str) -> usize {
+    let mut count = 0;
+    let mut count_b = 0;
+    for line in input.trim().split('\n') {
+        let mut chars: VecDeque<char> = line.chars().collect();
+        count_b += chars.len();
+
+        chars.pop_back();
+        chars.pop_front();
+
+        let mut escaped_state = EscapedState::None;
+        for c in &chars {
+            match escaped_state {
+                EscapedState::None => match c {
+                    '\\' => {
+                        escaped_state = EscapedState::Quote;
+                        count += 1;
+                    }
+                    _ => {
+                        count += 1;
+                    }
+                },
+                EscapedState::Quote => match c {
+                    '\\' | '"' => {
+                        escaped_state = EscapedState::None;
+                    }
+                    'x' => {
+                        escaped_state = EscapedState::Hex(2);
+                    }
+                    _ => {
+                        eprintln!("{line} {c}");
+                        panic!();
+                    }
+                },
+                EscapedState::Hex(i) => {
+                    if i == 1 {
+                        escaped_state = EscapedState::None;
+                    } else {
+                        escaped_state = EscapedState::Hex(i - 1);
+                    }
+                }
+            }
+        }
+    }
+    count_b - count
+}
+
+#[cfg(test)]
+mod tests {
+
+    use std::fs;
+
+    use crate::input;
+
+    use super::*;
+
+    #[test]
+    fn test_part_1_examples() {
+        let mut validations = vec![
+            (r#""""#, (2, 0)),
+            (r#""\""#, (3, 1)),
+            (r#""\x27""#, (6, 1)),
+            (r#""\"\"""#, (6, 2)),
+            (r#""abc""#, (5, 3)),
+            (r#""aaa\"aaa""#, (10, 7)),
+            (r#""\x27""#, (6, 1)),
+            (r#""\x4f\x22""#, (10, 2)),
+            (r#""\xab\"\xab""#, (12, 3)),
+            (r#""ikfv""#, (6, 4)),
+            (r#""\xd2cuho""#, (10, 5)),
+            (r#""vj""#, (4, 2)),
+            (r#""d""#, (3, 1)),
+            (r#""\\g""#, (5, 2)),
+            (r#""ubgxxcvnltzaucrzg\\xcez""#, (25, 22)),
+        ];
+
+        let mut partial_solutions = Vec::default();
+        for (input, expected_result) in validations.iter_mut() {
+            println!("==========================================================");
+            dbg!(&expected_result);
+            // dbg!(&input);
+            let line_result = Day8::count_chars_in_str(input);
+            dbg!(&line_result);
+            assert_eq!(line_result, expected_result.to_owned());
+
+            partial_solutions.push(line_result);
+        }
+    }
+
+    #[test]
+    fn test_part_1_from_file() {
+        let test_files_setups = [
+            ("../inputs/2015/day8_jkpr.txt", 1350),
+            ("../inputs/2015/day8_jocelyn_stericher.txt", 1371),
+            ("../inputs/2015/day8_example.txt", 17),
+            ("../inputs/2015/day8.txt", 1342),
+        ];
+
+        for (input_file_path, expected_result) in test_files_setups.iter() {
+            let file_content = fs::read_to_string(input_file_path).unwrap();
+            let ref_response = part_a(&file_content);
+            let lines: Vec<String> = input::parse_file_lines(input_file_path).unwrap();
+
+            let mut partial_solutions = Vec::default();
+            for line in lines.iter() {
+                let line_result = Day8::count_chars_in_str(line);
+                let ref_line_result = part_a(line);
+
+                if ref_line_result != (line_result.0 - line_result.1) {
+                    dbg!(line, ref_line_result, line_result);
+                }
+                partial_solutions.push(line_result);
+            }
+
+            let result = partial_solutions.iter().fold(0, |acc, x| acc + (x.0 - x.1));
+            assert_eq!(ref_response, result);
+
+            assert_eq!(result, expected_result.to_owned());
+        }
+    }
+}

@@ -5,10 +5,6 @@ edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[lib]
-name = "aoc"
-path = "src/lib.rs"
-
 [dependencies]
 anyhow = "1.0.97"
 clap = { version = "4.5.31", features = ["derive"] }
@@ -19,3 +15,4 @@ nalgebra = "0.33.2"
 regex = "1.11.1"
 strum = "0.27.1"
 strum_macros = "0.27.1"
+thiserror = "2.0.12"

@@ -1,4 +1,4 @@
-use crate::solutions::{Day, DaySolution, PartResult, Solution};
+use crate::solution::{Day, DaySolution, PartResult, Solution};
 
 #[derive(Debug)]
 pub struct Day1 {}
@@ -20,7 +20,7 @@ impl Day for Day1 {
 
 impl Solution for Day1 {
     fn part1(&mut self) -> PartResult {
-        let input = self.get_input(None);
+        let input = self.get_input(None)?;
         let ups = input.matches("(").count();
         let downs = input.matches(")").count();
 
@@ -30,7 +30,7 @@ impl Solution for Day1 {
     }
 
     fn part2(&mut self) -> PartResult {
-        let input = self.get_input(None);
+        let input = self.get_input(None)?;
 
         let expected_floor = -1;
 

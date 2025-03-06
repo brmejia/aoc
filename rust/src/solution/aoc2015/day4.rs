@@ -1,8 +1,9 @@
 use std::collections::HashMap;
 
-use anyhow::Ok;
-
-use crate::solutions::{Day, DaySolution, PartResult, Solution};
+use crate::{
+    input,
+    solution::{Day, DaySolution, PartResult, Solution},
+};
 
 #[derive(Debug)]
 pub struct Day4 {
@@ -65,8 +66,8 @@ impl Day for Day4 {
 
 impl Solution for Day4 {
     fn part1(&mut self) -> PartResult {
-        let input = self.get_input(None);
-        let base_key = aoc::parse_input_lines::<String>(&input)
+        let input = self.get_input(None)?;
+        let base_key = input::parse_input_lines::<String>(&input)
             .unwrap()
             .first()
             .expect("Unable to read input")
@@ -78,8 +79,8 @@ impl Solution for Day4 {
     }
 
     fn part2(&mut self) -> PartResult {
-        let input = self.get_input(None);
-        let base_key = aoc::parse_input_lines::<String>(&input)
+        let input = self.get_input(None)?;
+        let base_key = input::parse_input_lines::<String>(&input)
             .unwrap()
             .first()
             .expect("Unable to read input")

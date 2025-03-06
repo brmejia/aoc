@@ -1,6 +1,9 @@
 use std::collections::HashSet;
 
-use crate::solutions::{Day, DaySolution, PartResult, Solution};
+use crate::{
+    input,
+    solution::{Day, DaySolution, PartResult, Solution},
+};
 
 #[derive(Debug)]
 pub struct Day3 {}
@@ -72,8 +75,8 @@ impl Day for Day3 {
 }
 impl Solution for Day3 {
     fn part1(&mut self) -> PartResult {
-        let input = self.get_input(None);
-        let lines = aoc::parse_input_lines::<String>(&input).unwrap();
+        let input = self.get_input(None)?;
+        let lines = input::parse_input_lines::<String>(&input).unwrap();
 
         return Ok(lines
             .into_iter()
@@ -82,8 +85,8 @@ impl Solution for Day3 {
     }
 
     fn part2(&mut self) -> PartResult {
-        let input = self.get_input(None);
-        let lines = aoc::parse_input_lines::<String>(&input).unwrap();
+        let input = self.get_input(None)?;
+        let lines = input::parse_input_lines::<String>(&input).unwrap();
 
         return Ok(lines
             .into_iter()

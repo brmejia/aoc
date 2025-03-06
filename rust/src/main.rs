@@ -1,8 +1,12 @@
 extern crate nalgebra as na;
 
-mod solutions;
+mod error;
+mod input;
+mod problem;
+mod solution;
 
 use clap::Parser;
+use problem::Problem;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -13,12 +17,19 @@ struct Cli {
 
 fn main() {
     let cli = Cli::parse();
-    let selected_day = solutions::get_solutions(cli.year, cli.day);
 
-    for sol in selected_day.into_iter() {
-        match sol {
-            Some(mut s) => s.run(),
-            None => println!("Solution for day is not yet implemented"),
+    let problems = match cli.day {
+        Some(day) => vec![Problem::new(cli.year, day)],
+        None => (1..=24).map(|d| Problem::new(cli.year, d)).collect(),
+    };
+
+    for problem in problems {
+        match problem {
+            Ok(mut p) => {
+                println!("---- {} Day {} ----", p.get_year(), p.get_day());
+                p.solution.solve();
+            }
+            Err(e) => println!("Error: {}", e),
         }
     }
 }

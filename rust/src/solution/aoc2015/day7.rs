@@ -7,7 +7,10 @@ use regex::Regex;
 use std::str::FromStr;
 use strum_macros::EnumString;
 
-use crate::solutions::{Day, DaySolution, PartResult, Solution, get_problem_input};
+use crate::{
+    input,
+    solution::{Day, DaySolution, PartResult, Solution, get_problem_input},
+};
 
 #[derive(Debug, PartialEq, Eq, Hash)]
 enum Input {
@@ -260,7 +263,7 @@ impl Day7 {
             year,
             day,
             circuit: Circuit::default(),
-            input_lines: aoc::parse_input_lines(&input).unwrap(),
+            input_lines: input::parse_input_lines(&input).unwrap(),
         }
     }
 }
