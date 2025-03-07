@@ -2,28 +2,26 @@ use std::collections::VecDeque;
 
 use crate::{
     input,
-    solution::{Day, DaySolution, PartResult, Solution, get_default_input_path},
+    solution::{DaySolution, PartResult, Solution},
 };
 use lazy_static::lazy_static;
 use regex::Regex;
 
 #[derive(Debug)]
 pub struct Day8 {
-    pub year: u16,
-    pub day: u8,
     input_lines: Vec<String>,
 }
 
 impl Day8 {
     pub fn new() -> Self {
-        let (year, day) = (2015, 8);
-        let input_lines = input::parse_file_lines(get_default_input_path(year, day));
-
         Self {
-            year,
-            day,
-            input_lines: input_lines.unwrap(),
+            input_lines: vec![],
         }
+    }
+
+    fn with_input(&mut self, input: String) -> &Self {
+        self.input_lines = input::parse_input_lines(&input).unwrap();
+        self
     }
 
     fn count_hex(input: &str) -> (usize, String) {
@@ -104,25 +102,16 @@ impl Day8 {
     }
 }
 
-impl Day for Day8 {
-    fn get_year(&self) -> usize {
-        self.year.into()
-    }
-    fn get_day(&self) -> usize {
-        self.day.into()
-    }
-}
-
 impl Solution for Day8 {
-    fn part1(&mut self) -> PartResult {
+    fn part1(&mut self, input: String) -> PartResult {
+        self.with_input(input);
         let counts = Self::part_1(&self.input_lines);
 
         Ok(vec![counts.to_string()])
     }
 
-    fn part2(&mut self) -> PartResult {
-        // Write here your solution
-
+    fn part2(&mut self, input: String) -> PartResult {
+        self.with_input(input);
         Ok(vec!["Incomplete".to_string()])
     }
 }

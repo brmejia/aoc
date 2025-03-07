@@ -1,6 +1,6 @@
 use crate::{
     input,
-    solution::{Day, DaySolution, PartResult, Solution},
+    solution::{DaySolution, PartResult, Solution},
 };
 use itertools::Itertools;
 
@@ -14,66 +14,54 @@ impl Day5 {
 }
 fn count_vowels(input: &str) -> usize {
     let vowels = ['a', 'e', 'i', 'o', 'u'];
-    return input.chars().filter(|c| vowels.contains(&c)).count();
+    input.chars().filter(|c| vowels.contains(c)).count()
 }
 
 fn have_consecutive_chars(input: &str) -> bool {
-    return input.chars().tuple_windows().any(|(a, b)| a == b);
+    input.chars().tuple_windows().any(|(a, b)| a == b)
 }
 
 fn have_forbidden_pattern(input: &str) -> bool {
     let forbidden_patterns = ["ab", "cd", "pq", "xy"];
-    return forbidden_patterns.iter().any(|pat| input.contains(pat));
+    forbidden_patterns.iter().any(|pat| input.contains(pat))
 }
 
 fn is_nice(input: &str) -> bool {
-    return (count_vowels(input) >= 3)
-        & have_consecutive_chars(input)
-        & !have_forbidden_pattern(input);
+    (count_vowels(input) >= 3) & have_consecutive_chars(input) & !have_forbidden_pattern(input)
 }
 
 fn super_nice_rule_1(input: &str) -> bool {
-    return input.chars().tuple_windows::<(char, char)>().any(|pat| {
+    input.chars().tuple_windows::<(char, char)>().any(|pat| {
         input
             .matches(format!("{}{}", pat.0, pat.1).as_str())
             .count()
             >= 2
-    });
+    })
 }
 
 fn super_nice_rule_2(input: &str) -> bool {
-    return input.chars().tuple_windows().any(|(a, _, b)| a == b);
+    input.chars().tuple_windows().any(|(a, _, b)| a == b)
 }
 
 fn is_super_nice(input: &str) -> bool {
-    return super_nice_rule_1(input) & super_nice_rule_2(input);
+    super_nice_rule_1(input) & super_nice_rule_2(input)
 }
 
-impl Day for Day5 {
-    fn get_year(&self) -> usize {
-        return 2015;
-    }
-    fn get_day(&self) -> usize {
-        return 5;
-    }
-}
 impl Solution for Day5 {
-    fn part1(&mut self) -> PartResult {
-        let input = self.get_input(None)?;
+    fn part1(&mut self, input: String) -> PartResult {
         let lines = input::parse_input_lines::<String>(&input).unwrap();
 
         let nice_words: usize = lines.iter().filter(|line| is_nice(line)).count();
 
-        return Ok(vec![nice_words.to_string()]);
+        Ok(vec![nice_words.to_string()])
     }
 
-    fn part2(&mut self) -> PartResult {
-        let input = self.get_input(None)?;
+    fn part2(&mut self, input: String) -> PartResult {
         let lines = input::parse_input_lines::<String>(&input).unwrap();
 
         let super_nice_words: usize = lines.iter().filter(|line| is_super_nice(line)).count();
 
-        return Ok(vec![super_nice_words.to_string()]);
+        Ok(vec![super_nice_words.to_string()])
     }
 }
 

@@ -1,48 +1,36 @@
-use crate::solution::{Day, DaySolution, PartResult, Solution};
+use crate::solution::{DaySolution, PartResult, Solution};
 
 #[derive(Debug)]
 pub struct Day1 {}
 
 impl Day1 {
     pub fn new() -> Self {
-        return Self {};
-    }
-}
-
-impl Day for Day1 {
-    fn get_year(&self) -> usize {
-        return 2015;
-    }
-    fn get_day(&self) -> usize {
-        return 1;
+        Self {}
     }
 }
 
 impl Solution for Day1 {
-    fn part1(&mut self) -> PartResult {
-        let input = self.get_input(None)?;
+    fn part1(&mut self, input: String) -> PartResult {
         let ups = input.matches("(").count();
         let downs = input.matches(")").count();
 
         let floor = ups - downs;
 
-        return Ok(vec![floor.to_string()]);
+        Ok(vec![floor.to_string()])
     }
 
-    fn part2(&mut self) -> PartResult {
-        let input = self.get_input(None)?;
-
+    fn part2(&mut self, input: String) -> PartResult {
         let expected_floor = -1;
 
         let mut floor = 0;
         let mut idx = 0;
-        for (_idx, char) in input.chars().into_iter().enumerate() {
+        for (_idx, char) in input.chars().enumerate() {
             match char {
                 '(' => {
-                    floor = floor + 1;
+                    floor += 1;
                 }
                 ')' => {
-                    floor = floor - 1;
+                    floor -= 1;
                 }
                 _ => (),
             };
@@ -52,7 +40,7 @@ impl Solution for Day1 {
             }
         }
 
-        return Ok(vec![idx.to_string()]);
+        Ok(vec![idx.to_string()])
     }
 }
 

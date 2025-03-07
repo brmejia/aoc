@@ -6,6 +6,7 @@ mod problem;
 mod solution;
 
 use clap::Parser;
+use input::get_default_input_path;
 use problem::Problem;
 
 #[derive(Parser)]
@@ -27,7 +28,8 @@ fn main() {
         match problem {
             Ok(mut p) => {
                 println!("---- {} Day {} ----", p.get_year(), p.get_day());
-                p.solution.solve();
+                let input = p.get_default_input().expect("Error getting default input");
+                p.solution.solve(input);
             }
             Err(e) => println!("Error: {}", e),
         }

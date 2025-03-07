@@ -3,6 +3,8 @@ pub mod error;
 use error::Result;
 use std::{fs, path::Path, str::FromStr};
 
+const INPUT_BASE_PATH: &str = "../inputs/";
+
 pub fn parse_input_lines<T: FromStr>(input: &str) -> Result<Vec<T>> {
     Ok(input
         .lines()
@@ -26,4 +28,10 @@ pub fn parse_file_lines<T: FromStr>(file_path: impl AsRef<Path>) -> Result<Vec<T
     ?;
 
     parse_input_lines(&file_content)
+}
+
+pub fn get_default_input_path(year: u16, day: u8) -> String {
+    let mut input_path = INPUT_BASE_PATH.to_string();
+    input_path.push_str(&format!("{}/day{}.txt", year, day));
+    input_path
 }

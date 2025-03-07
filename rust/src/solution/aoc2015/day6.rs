@@ -6,7 +6,7 @@ use std::{ops::Add, str::FromStr};
 
 use crate::{
     input,
-    solution::{Day, DaySolution, PartResult, Solution},
+    solution::{DaySolution, PartResult, Solution},
 };
 
 #[derive(Debug)]
@@ -15,15 +15,6 @@ pub struct Day6 {}
 impl Day6 {
     pub fn new() -> Self {
         Self {}
-    }
-}
-
-impl Day for Day6 {
-    fn get_year(&self) -> usize {
-        2015
-    }
-    fn get_day(&self) -> usize {
-        6
     }
 }
 
@@ -184,8 +175,7 @@ impl Grid {
 }
 
 impl Solution for Day6 {
-    fn part1(&mut self) -> PartResult {
-        let input = self.get_input(None)?;
+    fn part1(&mut self, input: String) -> PartResult {
         let lines = input::parse_input_lines::<String>(&input).unwrap();
 
         let mut grid = Grid::new((1000, 1000));
@@ -202,8 +192,7 @@ impl Solution for Day6 {
         Ok(vec![grid.sum().to_string()])
     }
 
-    fn part2(&mut self) -> PartResult {
-        let input = self.get_input(None)?;
+    fn part2(&mut self, input: String) -> PartResult {
         let lines = input::parse_input_lines::<String>(&input).unwrap();
 
         let mut grid = Grid::new((1000, 1000));

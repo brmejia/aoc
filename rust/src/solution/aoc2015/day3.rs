@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use crate::{
     input,
-    solution::{Day, DaySolution, PartResult, Solution},
+    solution::{DaySolution, PartResult, Solution},
 };
 
 #[derive(Debug)]
@@ -10,7 +10,7 @@ pub struct Day3 {}
 
 impl Day3 {
     pub fn new() -> Self {
-        return Self {};
+        Self {}
     }
 }
 
@@ -20,7 +20,7 @@ struct HousePosition {
     y: isize,
 }
 
-fn houses_visited_by_santa(input: &String) -> usize {
+fn houses_visited_by_santa(input: &str) -> usize {
     let mut santa_pos = HousePosition { x: 0, y: 0 };
     let mut visited_houses = HashSet::new();
 
@@ -36,10 +36,10 @@ fn houses_visited_by_santa(input: &String) -> usize {
         }
         visited_houses.insert(santa_pos);
     }
-    return visited_houses.len();
+    visited_houses.len()
 }
 
-fn houses_visited_by_robo_santa(input: &String) -> usize {
+fn houses_visited_by_robo_santa(input: &str) -> usize {
     let mut santa_pos = HousePosition { x: 0, y: 0 };
     let mut robo_santa_pos = HousePosition { x: 0, y: 0 };
 
@@ -62,36 +62,26 @@ fn houses_visited_by_robo_santa(input: &String) -> usize {
         }
         visited_houses.insert(*actor_ptr);
     }
-    return visited_houses.len();
+    visited_houses.len()
 }
 
-impl Day for Day3 {
-    fn get_year(&self) -> usize {
-        return 2015;
-    }
-    fn get_day(&self) -> usize {
-        return 3;
-    }
-}
 impl Solution for Day3 {
-    fn part1(&mut self) -> PartResult {
-        let input = self.get_input(None)?;
+    fn part1(&mut self, input: String) -> PartResult {
         let lines = input::parse_input_lines::<String>(&input).unwrap();
 
-        return Ok(lines
+        Ok(lines
             .into_iter()
             .map(|line| houses_visited_by_santa(&line).to_string())
-            .collect());
+            .collect())
     }
 
-    fn part2(&mut self) -> PartResult {
-        let input = self.get_input(None)?;
+    fn part2(&mut self, input: String) -> PartResult {
         let lines = input::parse_input_lines::<String>(&input).unwrap();
 
-        return Ok(lines
+        Ok(lines
             .into_iter()
             .map(|line| houses_visited_by_robo_santa(&line).to_string())
-            .collect());
+            .collect())
     }
 }
 
@@ -106,7 +96,7 @@ mod tests {
         let validations = vec![(">", 2), ("^>v<", 4), ("^v^v^v^v^v", 2)];
 
         for (input, expected_result) in validations.into_iter() {
-            let result = houses_visited_by_santa(&input.to_string());
+            let result = houses_visited_by_santa(input);
 
             assert_eq!(result, expected_result);
         }
@@ -117,7 +107,7 @@ mod tests {
         let validations = vec![("^v", 3), ("^>v<", 3), ("^v^v^v^v^v", 11)];
 
         for (input, expected_result) in validations.into_iter() {
-            let result = houses_visited_by_robo_santa(&input.to_string());
+            let result = houses_visited_by_robo_santa(input);
 
             assert_eq!(result, expected_result);
         }

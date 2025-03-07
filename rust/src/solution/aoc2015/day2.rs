@@ -2,7 +2,7 @@ use std::{fmt::Display, str::FromStr};
 
 use crate::{
     input,
-    solution::{Day, DaySolution, PartResult, Solution},
+    solution::{DaySolution, PartResult, Solution},
 };
 
 #[derive(Debug)]
@@ -10,7 +10,7 @@ pub struct Day2 {}
 
 impl Day2 {
     pub fn new() -> Self {
-        return Self {};
+        Self {}
     }
 }
 
@@ -23,16 +23,16 @@ struct Package {
 
 impl Package {
     fn new(l: usize, w: usize, h: usize) -> Self {
-        return Self { l, w, h };
+        Self { l, w, h }
     }
 
     fn required_surface(&self) -> usize {
         let [l, w, h] = [self.l, self.w, self.h];
-        return 2 * (l * w + l * h + w * h) + (l * w).min(l * h).min(w * h);
+        2 * (l * w + l * h + w * h) + (l * w).min(l * h).min(w * h)
     }
     fn required_ribon(&self) -> usize {
         let [l, w, h] = [self.l, self.w, self.h];
-        return (l * w * h) + (2 * (l + w + h - l.max(w).max(h)));
+        (l * w * h) + (2 * (l + w + h - l.max(w).max(h)))
     }
 }
 
@@ -47,41 +47,31 @@ impl<T: FromStr + Display> From<T> for Package {
     }
 }
 
-impl Day for Day2 {
-    fn get_year(&self) -> usize {
-        return 2015;
-    }
-    fn get_day(&self) -> usize {
-        return 2;
-    }
-}
 impl Solution for Day2 {
-    fn part1(&mut self) -> PartResult {
-        let input = self.get_input(None)?;
+    fn part1(&mut self, input: String) -> PartResult {
         let lines = input::parse_input_lines::<String>(&input).unwrap();
 
-        let packages: Vec<Package> = lines.into_iter().map(|line| Package::from(line)).collect();
+        let packages: Vec<Package> = lines.into_iter().map(Package::from).collect();
 
         let total_surface: usize = packages
             .iter()
             .map(|package| package.required_surface())
             .sum();
 
-        return Ok(vec![total_surface.to_string()]);
+        Ok(vec![total_surface.to_string()])
     }
 
-    fn part2(&mut self) -> PartResult {
-        let input = self.get_input(None)?;
+    fn part2(&mut self, input: String) -> PartResult {
         let lines = input::parse_input_lines::<String>(&input).unwrap();
 
-        let packages: Vec<Package> = lines.into_iter().map(|line| Package::from(line)).collect();
+        let packages: Vec<Package> = lines.into_iter().map(Package::from).collect();
 
         let total_ribon: usize = packages
             .iter()
             .map(|package| package.required_ribon())
             .sum();
 
-        return Ok(vec![total_ribon.to_string()]);
+        Ok(vec![total_ribon.to_string()])
     }
 }
 

@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::{
     input,
-    solution::{Day, DaySolution, PartResult, Solution},
+    solution::{DaySolution, PartResult, Solution},
 };
 
 #[derive(Debug)]
@@ -55,18 +55,8 @@ impl Day4 {
     }
 }
 
-impl Day for Day4 {
-    fn get_year(&self) -> usize {
-        2015
-    }
-    fn get_day(&self) -> usize {
-        4
-    }
-}
-
 impl Solution for Day4 {
-    fn part1(&mut self) -> PartResult {
-        let input = self.get_input(None)?;
+    fn part1(&mut self, input: String) -> PartResult {
         let base_key = input::parse_input_lines::<String>(&input)
             .unwrap()
             .first()
@@ -75,11 +65,10 @@ impl Solution for Day4 {
 
         let difficulty = 5;
         let k = self.find_hash_integer::<usize>(&base_key, difficulty);
-        return Ok(vec![k.to_string()]);
+        Ok(vec![k.to_string()])
     }
 
-    fn part2(&mut self) -> PartResult {
-        let input = self.get_input(None)?;
+    fn part2(&mut self, input: String) -> PartResult {
         let base_key = input::parse_input_lines::<String>(&input)
             .unwrap()
             .first()
@@ -87,7 +76,7 @@ impl Solution for Day4 {
             .clone();
         let difficulty = 6;
         let k = self.find_hash_integer::<usize>(&base_key, difficulty);
-        return Ok(vec![k.to_string()]);
+        Ok(vec![k.to_string()])
     }
 }
 

@@ -9,7 +9,7 @@ use strum_macros::EnumString;
 
 use crate::{
     input,
-    solution::{Day, DaySolution, PartResult, Solution, get_problem_input},
+    solution::{DaySolution, PartResult, Solution},
 };
 
 #[derive(Debug, PartialEq, Eq, Hash)]
@@ -248,37 +248,26 @@ impl Default for Circuit {
 
 #[derive(Debug)]
 pub struct Day7 {
-    pub year: u16,
-    pub day: u8,
     circuit: Circuit,
     input_lines: Vec<String>,
 }
 
 impl Day7 {
     pub fn new() -> Self {
-        let (year, day) = (2015, 7);
-
-        let input = get_problem_input(year, day).unwrap();
         Self {
-            year,
-            day,
             circuit: Circuit::default(),
-            input_lines: input::parse_input_lines(&input).unwrap(),
+            input_lines: vec![],
         }
     }
-}
-
-impl Day for Day7 {
-    fn get_year(&self) -> usize {
-        self.year.into()
-    }
-    fn get_day(&self) -> usize {
-        self.day.into()
+    fn with_input(&mut self, input: String) -> &Self {
+        self.input_lines = input::parse_input_lines(&input).unwrap();
+        self
     }
 }
 
 impl Solution for Day7 {
-    fn part1(&mut self) -> PartResult {
+    fn part1(&mut self, input: String) -> PartResult {
+        self.with_input(input);
         for line in self.input_lines.iter() {
             let conn = Connection::from_str(line).unwrap();
             self.circuit.add_connection(conn);
@@ -287,7 +276,8 @@ impl Solution for Day7 {
         Ok(vec![self.circuit.signals.get("a").unwrap().to_string()])
     }
 
-    fn part2(&mut self) -> PartResult {
+    fn part2(&mut self, input: String) -> PartResult {
+        self.with_input(input);
         let prev_value = self.circuit.signals.get("a").unwrap().to_owned();
         // Clear all signal values and redefine the value for b
         self.circuit.signals.clear();
