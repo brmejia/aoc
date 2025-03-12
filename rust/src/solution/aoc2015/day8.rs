@@ -2,7 +2,7 @@ use std::collections::VecDeque;
 
 use crate::{
     input,
-    solution::{DaySolution, PartResult, Solution},
+    solution::{PartResult, Solution},
 };
 use lazy_static::lazy_static;
 use regex::Regex;
@@ -116,7 +116,6 @@ impl Solution for Day8 {
     }
 }
 
-impl DaySolution for Day8 {}
 
 enum EscapedState {
     None,

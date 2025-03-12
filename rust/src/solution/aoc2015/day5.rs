@@ -1,6 +1,6 @@
 use crate::{
     input,
-    solution::{DaySolution, PartResult, Solution},
+    solution::{ PartResult, Solution},
 };
 use itertools::Itertools;
 
@@ -64,8 +64,6 @@ impl Solution for Day5 {
         Ok(vec![super_nice_words.to_string()])
     }
 }
-
-impl DaySolution for Day5 {}
 
 #[cfg(test)]
 mod tests {

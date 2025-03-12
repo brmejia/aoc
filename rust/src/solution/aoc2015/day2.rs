@@ -2,7 +2,7 @@ use std::{fmt::Display, str::FromStr};
 
 use crate::{
     input,
-    solution::{DaySolution, PartResult, Solution},
+    solution::{ PartResult, Solution},
 };
 
 #[derive(Debug)]
@@ -41,7 +41,7 @@ impl<T: FromStr + Display> From<T> for Package {
         let [l, w, h]: [usize; 3] = input::split_line::<usize>(&string_like.to_string(), 'x')
             .unwrap()
             .try_into()
-            .expect(format!("Error parsing package: {}", string_like).as_str());
+            .unwrap_or_else(|_| panic!("Error parsing package: {}", string_like));
 
         Self::new(l, w, h)
     }
@@ -74,8 +74,6 @@ impl Solution for Day2 {
         Ok(vec![total_ribon.to_string()])
     }
 }
-
-impl DaySolution for Day2 {}
 
 #[cfg(test)]
 mod tests {

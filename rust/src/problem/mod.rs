@@ -1,15 +1,15 @@
-use std::fs;
+use std::{cell::RefCell, fs};
 
 use crate::{
     error::{AoCError, Result},
     input::get_default_input_path,
-    solution::{DaySolution, try_get_day_solution},
+    solution::{try_get_day_solution, Solution},
 };
 
 pub struct Problem {
     pub year: u16,
     pub day: u8,
-    pub solution: Box<dyn DaySolution>,
+    pub solution: RefCell<Box<dyn Solution>>,
 }
 
 impl Problem {
@@ -20,7 +20,7 @@ impl Problem {
         Ok(Self {
             year,
             day,
-            solution,
+            solution: RefCell::new(solution),
         })
     }
 

@@ -9,7 +9,7 @@ use strum_macros::EnumString;
 
 use crate::{
     input,
-    solution::{DaySolution, PartResult, Solution},
+    solution::{ PartResult, Solution},
 };
 
 #[derive(Debug, PartialEq, Eq, Hash)]
@@ -303,8 +303,6 @@ impl Solution for Day7 {
         Ok(vec![result.to_string()])
     }
 }
-
-impl DaySolution for Day7 {}
 
 #[cfg(test)]
 mod tests {

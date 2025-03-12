@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::{
     input,
-    solution::{DaySolution, PartResult, Solution},
+    solution::{ PartResult, Solution},
 };
 
 #[derive(Debug)]
@@ -79,8 +79,6 @@ impl Solution for Day4 {
         Ok(vec![k.to_string()])
     }
 }
-
-impl DaySolution for Day4 {}
 
 #[cfg(test)]
 mod tests {

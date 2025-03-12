@@ -6,7 +6,7 @@ use std::{ops::Add, str::FromStr};
 
 use crate::{
     input,
-    solution::{DaySolution, PartResult, Solution},
+    solution::{ PartResult, Solution},
 };
 
 #[derive(Debug)]
@@ -209,8 +209,6 @@ impl Solution for Day6 {
         Ok(vec![grid.sum().to_string()])
     }
 }
-
-impl DaySolution for Day6 {}
 
 #[cfg(test)]
 mod tests {

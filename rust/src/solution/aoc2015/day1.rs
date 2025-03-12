@@ -1,4 +1,4 @@
-use crate::solution::{DaySolution, PartResult, Solution};
+use crate::solution::{ PartResult, Solution};
 
 #[derive(Debug)]
 pub struct Day1 {}
@@ -43,5 +43,3 @@ impl Solution for Day1 {
         Ok(vec![idx.to_string()])
     }
 }
-
-impl DaySolution for Day1 {}

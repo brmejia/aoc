@@ -22,7 +22,7 @@ use day7::Day7;
 use day8::Day8;
 
 use super::{
-    DaySolution,
+    Solution,
     error::{Result, SolutionError},
 };
 
@@ -34,8 +34,8 @@ const UPPER_DAYS_LIMIT: u8 = 9;
 ///
 /// This function will return an error if the day is not implemented or if the day is out of the range of 1-25.
 ///
-pub fn try_get_day_solution(day: u8) -> Result<Box<dyn DaySolution>> {
-    let day_solution: Result<Box<dyn DaySolution>> = match day {
+pub fn try_get_day_solution(day: u8) -> Result<Box<dyn Solution>> {
+    let day_solution: Result<Box<dyn Solution>> = match day {
         1 => Ok(Box::new(Day1::new())),
         2 => Ok(Box::new(Day2::new())),
         3 => Ok(Box::new(Day3::new())),
@@ -50,7 +50,7 @@ pub fn try_get_day_solution(day: u8) -> Result<Box<dyn DaySolution>> {
     day_solution
 }
 
-pub fn get_solutions() -> HashMap<u8, Result<Box<dyn DaySolution>>> {
+pub fn get_solutions() -> HashMap<u8, Result<Box<dyn Solution>>> {
     let mut solutions = HashMap::new();
     for day in 1..UPPER_DAYS_LIMIT {
         solutions.insert(day, try_get_day_solution(day));

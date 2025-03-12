@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use crate::{
     input,
-    solution::{DaySolution, PartResult, Solution},
+    solution::{ PartResult, Solution},
 };
 
 #[derive(Debug)]
@@ -84,8 +84,6 @@ impl Solution for Day3 {
             .collect())
     }
 }
-
-impl DaySolution for Day3 {}
 
 #[cfg(test)]
 mod tests {

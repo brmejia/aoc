@@ -5,8 +5,9 @@ mod input;
 mod problem;
 mod solution;
 
+use std::time::Instant;
+
 use clap::Parser;
-use input::get_default_input_path;
 use problem::Problem;
 
 #[derive(Parser)]
@@ -14,6 +15,40 @@ use problem::Problem;
 struct Cli {
     year: u16,
     day: Option<u8>,
+}
+
+
+fn print_solution( title: &str, lines: &[String]) {
+    let title = title.trim();
+    let indent_size = title.len() + 1;
+
+    println!("{} {}", title, lines.first().unwrap());
+    for line in lines.iter().skip(1) {
+        println!("{}{}", " ".repeat(indent_size), &line);
+    }
+}
+
+fn solve_problem(problem: Problem, input: String) {
+    let _: Vec<_> = (1..=2)
+        .map(|part_idx| {
+            let current = Instant::now();
+            let result = match part_idx {
+                1 => problem.solution.borrow_mut().part1(input.clone()),
+                2 => problem.solution.borrow_mut().part2(input.clone()),
+                _ => todo!(),
+            };
+            let duration = current.elapsed();
+
+            match result {
+                Ok(r) => {
+                    print_solution(format!("Part {part_idx}:").as_str(), &r);
+                    println!("Elapsed time: {:?}\n", duration);
+                    Ok(r)
+                }
+                Err(e) => Err(e),
+            }
+        })
+        .collect();
 }
 
 fn main() {
@@ -26,10 +61,10 @@ fn main() {
 
     for problem in problems {
         match problem {
-            Ok(mut p) => {
+            Ok(p) => {
                 println!("---- {} Day {} ----", p.get_year(), p.get_day());
                 let input = p.get_default_input().expect("Error getting default input");
-                p.solution.solve(input);
+                solve_problem(p, input);
             }
             Err(e) => println!("Error: {}", e),
         }
