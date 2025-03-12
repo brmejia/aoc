@@ -24,7 +24,7 @@ impl Day8 {
         self
     }
 
-    fn count_hex(input: &str) -> (usize, String) {
+    fn count_and_replace_hex(input: &str) -> (usize, String) {
         lazy_static! {
             // static ref HEX_RE: Regex = Regex::new(r"\\x\d{2}").unwrap();
             static ref HEX_RE: Regex = Regex::new(r"\\x[a-fA-F0-9]{2}").unwrap();
@@ -33,7 +33,7 @@ impl Day8 {
         (count, HEX_RE.replace_all(input, "").to_string())
     }
 
-    fn count_quotes(input: &str) -> (usize, String) {
+    fn count_and_replace_quotes(input: &str) -> (usize, String) {
         lazy_static! {
             static ref START_DQUOTE_RE: Regex = Regex::new(r#"^["]"#).unwrap();
             static ref END_DQUOTE_RE: Regex = Regex::new(r#"["]$"#).unwrap();
@@ -50,7 +50,7 @@ impl Day8 {
 
         (quotes_count, input)
     }
-    fn count_backslashes(input: &str) -> (usize, String) {
+    fn count_and_replace_backslashes(input: &str) -> (usize, String) {
         // lazy_static! {
         //     static ref BSLASH_RE: Regex = Regex::new(r#"\\"#).unwrap();
         // }
@@ -71,41 +71,23 @@ impl Day8 {
         (count, input)
     }
 
-    pub fn count_chars_in_str(input: &str) -> (usize, usize) {
-        let initial_len = input.len();
-        // dbg!(&input);
-        // dbg!(&initial_len);
+    pub fn count_chars_in_str(input: &str) -> usize {
+        let (bslashes_count, remainder) = Self::count_and_replace_backslashes(input);
+        let (hex_count, remainder) = Self::count_and_replace_hex(&remainder);
+        let (quotes_count, remainder) = Self::count_and_replace_quotes(&remainder);
 
-        let (bslashes_count, input) = Self::count_backslashes(input);
-        // dbg!(&bslashes_count);
-        // dbg!(&input);
-
-        let (hex_count, input) = Self::count_hex(&input);
-        // dbg!(&hex_count);
-        // dbg!(&input);
-
-        let (quotes_count, input) = Self::count_quotes(&input);
-        // dbg!(&quotes_count);
-        // dbg!(&input);
-
-        let total_count = hex_count + quotes_count + bslashes_count + input.len();
-        (initial_len, total_count)
-        // (initial_len, input.len())
+        hex_count + quotes_count + bslashes_count + remainder.len()
     }
 
-    pub fn part_1(input_lines: &[String]) -> usize {
-        input_lines
-            .iter()
-            .map(|s| s.as_str())
-            .map(Day8::count_chars_in_str)
-            .fold(0, |acc, x| acc + (x.0 - x.1))
-    }
 }
 
 impl Solution for Day8 {
     fn part1(&mut self, input: &str) -> PartResult {
         self.with_input(input);
-        let counts = Self::part_1(&self.input_lines);
+        let counts = self.input_lines
+            .iter()
+            .map(|s| (s.len(), Day8::count_chars_in_str(s) ) )
+            .fold(0, |acc, x| acc + (x.0 - x.1));
 
         Ok(vec![counts.to_string()])
     }
@@ -203,7 +185,7 @@ mod tests {
             println!("==========================================================");
             dbg!(&expected_result);
             // dbg!(&input);
-            let line_result = Day8::count_chars_in_str(input);
+            let line_result = (input.len(), Day8::count_chars_in_str(input) );
             dbg!(&line_result);
             assert_eq!(line_result, expected_result.to_owned());
 
@@ -227,7 +209,7 @@ mod tests {
 
             let mut partial_solutions = Vec::default();
             for line in lines.iter() {
-                let line_result = Day8::count_chars_in_str(line);
+                let line_result = (line.len(), Day8::count_chars_in_str(line) );
                 let ref_line_result = part_a(line);
 
                 if ref_line_result != (line_result.0 - line_result.1) {
