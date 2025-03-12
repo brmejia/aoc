@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::{
     input,
-    solution::{ PartResult, Solution},
+    solution::{PartResult, Solution},
 };
 
 #[derive(Debug)]
@@ -56,8 +56,8 @@ impl Day4 {
 }
 
 impl Solution for Day4 {
-    fn part1(&mut self, input: String) -> PartResult {
-        let base_key = input::parse_input_lines::<String>(&input)
+    fn part1(&mut self, input: &str) -> PartResult {
+        let base_key = input::parse_input_lines::<String>(input)
             .unwrap()
             .first()
             .expect("Unable to read input")
@@ -68,8 +68,8 @@ impl Solution for Day4 {
         Ok(vec![k.to_string()])
     }
 
-    fn part2(&mut self, input: String) -> PartResult {
-        let base_key = input::parse_input_lines::<String>(&input)
+    fn part2(&mut self, input: &str) -> PartResult {
+        let base_key = input::parse_input_lines::<String>(input)
             .unwrap()
             .first()
             .expect("Unable to read input")

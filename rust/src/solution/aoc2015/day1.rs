@@ -1,4 +1,4 @@
-use crate::solution::{ PartResult, Solution};
+use crate::solution::{PartResult, Solution};
 
 #[derive(Debug)]
 pub struct Day1 {}
@@ -10,7 +10,7 @@ impl Day1 {
 }
 
 impl Solution for Day1 {
-    fn part1(&mut self, input: String) -> PartResult {
+    fn part1(&mut self, input: &str) -> PartResult {
         let ups = input.matches("(").count();
         let downs = input.matches(")").count();
 
@@ -19,7 +19,7 @@ impl Solution for Day1 {
         Ok(vec![floor.to_string()])
     }
 
-    fn part2(&mut self, input: String) -> PartResult {
+    fn part2(&mut self, input: &str) -> PartResult {
         let expected_floor = -1;
 
         let mut floor = 0;

@@ -19,8 +19,8 @@ impl Day8 {
         }
     }
 
-    fn with_input(&mut self, input: String) -> &Self {
-        self.input_lines = input::parse_input_lines(&input).unwrap();
+    fn with_input(&mut self, input: &str) -> &Self {
+        self.input_lines = input::parse_input_lines(input).unwrap();
         self
     }
 
@@ -103,19 +103,18 @@ impl Day8 {
 }
 
 impl Solution for Day8 {
-    fn part1(&mut self, input: String) -> PartResult {
+    fn part1(&mut self, input: &str) -> PartResult {
         self.with_input(input);
         let counts = Self::part_1(&self.input_lines);
 
         Ok(vec![counts.to_string()])
     }
 
-    fn part2(&mut self, input: String) -> PartResult {
+    fn part2(&mut self, input: &str) -> PartResult {
         self.with_input(input);
         Ok(vec!["Incomplete".to_string()])
     }
 }
-
 
 enum EscapedState {
     None,

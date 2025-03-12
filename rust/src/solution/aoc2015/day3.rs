@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use crate::{
     input,
-    solution::{ PartResult, Solution},
+    solution::{PartResult, Solution},
 };
 
 #[derive(Debug)]
@@ -66,8 +66,8 @@ fn houses_visited_by_robo_santa(input: &str) -> usize {
 }
 
 impl Solution for Day3 {
-    fn part1(&mut self, input: String) -> PartResult {
-        let lines = input::parse_input_lines::<String>(&input).unwrap();
+    fn part1(&mut self, input: &str) -> PartResult {
+        let lines = input::parse_input_lines::<String>(input).unwrap();
 
         Ok(lines
             .into_iter()
@@ -75,8 +75,8 @@ impl Solution for Day3 {
             .collect())
     }
 
-    fn part2(&mut self, input: String) -> PartResult {
-        let lines = input::parse_input_lines::<String>(&input).unwrap();
+    fn part2(&mut self, input: &str) -> PartResult {
+        let lines = input::parse_input_lines::<String>(input).unwrap();
 
         Ok(lines
             .into_iter()

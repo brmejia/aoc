@@ -17,8 +17,7 @@ struct Cli {
     day: Option<u8>,
 }
 
-
-fn print_solution( title: &str, lines: &[String]) {
+fn print_solution(title: &str, lines: &[String]) {
     let title = title.trim();
     let indent_size = title.len() + 1;
 
@@ -33,8 +32,8 @@ fn solve_problem(problem: Problem, input: String) {
         .map(|part_idx| {
             let current = Instant::now();
             let result = match part_idx {
-                1 => problem.solution.borrow_mut().part1(input.clone()),
-                2 => problem.solution.borrow_mut().part2(input.clone()),
+                1 => problem.get_solution().borrow_mut().part1(&input),
+                2 => problem.get_solution().borrow_mut().part2(&input),
                 _ => todo!(),
             };
             let duration = current.elapsed();

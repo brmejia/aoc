@@ -2,7 +2,7 @@ use std::{fmt::Display, str::FromStr};
 
 use crate::{
     input,
-    solution::{ PartResult, Solution},
+    solution::{PartResult, Solution},
 };
 
 #[derive(Debug)]
@@ -48,8 +48,8 @@ impl<T: FromStr + Display> From<T> for Package {
 }
 
 impl Solution for Day2 {
-    fn part1(&mut self, input: String) -> PartResult {
-        let lines = input::parse_input_lines::<String>(&input).unwrap();
+    fn part1(&mut self, input: &str) -> PartResult {
+        let lines = input::parse_input_lines::<String>(input).unwrap();
 
         let packages: Vec<Package> = lines.into_iter().map(Package::from).collect();
 
@@ -61,8 +61,8 @@ impl Solution for Day2 {
         Ok(vec![total_surface.to_string()])
     }
 
-    fn part2(&mut self, input: String) -> PartResult {
-        let lines = input::parse_input_lines::<String>(&input).unwrap();
+    fn part2(&mut self, input: &str) -> PartResult {
+        let lines = input::parse_input_lines::<String>(input).unwrap();
 
         let packages: Vec<Package> = lines.into_iter().map(Package::from).collect();
 

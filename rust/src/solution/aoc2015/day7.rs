@@ -9,7 +9,7 @@ use strum_macros::EnumString;
 
 use crate::{
     input,
-    solution::{ PartResult, Solution},
+    solution::{PartResult, Solution},
 };
 
 #[derive(Debug, PartialEq, Eq, Hash)]
@@ -259,14 +259,14 @@ impl Day7 {
             input_lines: vec![],
         }
     }
-    fn with_input(&mut self, input: String) -> &Self {
-        self.input_lines = input::parse_input_lines(&input).unwrap();
+    fn with_input(&mut self, input: &str) -> &Self {
+        self.input_lines = input::parse_input_lines(input).unwrap();
         self
     }
 }
 
 impl Solution for Day7 {
-    fn part1(&mut self, input: String) -> PartResult {
+    fn part1(&mut self, input: &str) -> PartResult {
         self.with_input(input);
         for line in self.input_lines.iter() {
             let conn = Connection::from_str(line).unwrap();
@@ -276,8 +276,8 @@ impl Solution for Day7 {
         Ok(vec![self.circuit.signals.get("a").unwrap().to_string()])
     }
 
-    fn part2(&mut self, input: String) -> PartResult {
-        self.with_input(input);
+    fn part2(&mut self, input: &str) -> PartResult {
+        self.with_input(input.as_ref());
         let prev_value = self.circuit.signals.get("a").unwrap().to_owned();
         // Clear all signal values and redefine the value for b
         self.circuit.signals.clear();

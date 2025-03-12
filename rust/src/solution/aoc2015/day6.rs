@@ -6,7 +6,7 @@ use std::{ops::Add, str::FromStr};
 
 use crate::{
     input,
-    solution::{ PartResult, Solution},
+    solution::{PartResult, Solution},
 };
 
 #[derive(Debug)]
@@ -175,8 +175,8 @@ impl Grid {
 }
 
 impl Solution for Day6 {
-    fn part1(&mut self, input: String) -> PartResult {
-        let lines = input::parse_input_lines::<String>(&input).unwrap();
+    fn part1(&mut self, input: &str) -> PartResult {
+        let lines = input::parse_input_lines::<String>(input).unwrap();
 
         let mut grid = Grid::new((1000, 1000));
 
@@ -192,8 +192,8 @@ impl Solution for Day6 {
         Ok(vec![grid.sum().to_string()])
     }
 
-    fn part2(&mut self, input: String) -> PartResult {
-        let lines = input::parse_input_lines::<String>(&input).unwrap();
+    fn part2(&mut self, input: &str) -> PartResult {
+        let lines = input::parse_input_lines::<String>(input).unwrap();
 
         let mut grid = Grid::new((1000, 1000));
 

@@ -1,6 +1,6 @@
 use crate::{
     input,
-    solution::{ PartResult, Solution},
+    solution::{PartResult, Solution},
 };
 use itertools::Itertools;
 
@@ -48,16 +48,16 @@ fn is_super_nice(input: &str) -> bool {
 }
 
 impl Solution for Day5 {
-    fn part1(&mut self, input: String) -> PartResult {
-        let lines = input::parse_input_lines::<String>(&input).unwrap();
+    fn part1(&mut self, input: &str) -> PartResult {
+        let lines = input::parse_input_lines::<String>(input).unwrap();
 
         let nice_words: usize = lines.iter().filter(|line| is_nice(line)).count();
 
         Ok(vec![nice_words.to_string()])
     }
 
-    fn part2(&mut self, input: String) -> PartResult {
-        let lines = input::parse_input_lines::<String>(&input).unwrap();
+    fn part2(&mut self, input: &str) -> PartResult {
+        let lines = input::parse_input_lines::<String>(input).unwrap();
 
         let super_nice_words: usize = lines.iter().filter(|line| is_super_nice(line)).count();
 

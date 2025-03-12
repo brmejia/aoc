@@ -1,15 +1,15 @@
-use std::{cell::RefCell, fs};
+use std::{cell::RefCell , fs};
 
 use crate::{
     error::{AoCError, Result},
     input::get_default_input_path,
-    solution::{try_get_day_solution, Solution},
+    solution::{Solution, try_get_day_solution},
 };
 
 pub struct Problem {
-    pub year: u16,
-    pub day: u8,
-    pub solution: RefCell<Box<dyn Solution>>,
+    year: u16,
+    day: u8,
+    solution: RefCell<Box<dyn Solution>>,
 }
 
 impl Problem {
@@ -44,5 +44,8 @@ impl Problem {
     }
     pub fn get_day(&self) -> u8 {
         self.day
+    }
+    pub fn get_solution(&self) -> &RefCell<Box<dyn Solution>> {
+        &self.solution
     }
 }
