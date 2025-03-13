@@ -1,4 +1,6 @@
-use std::{cell::RefCell , fs};
+use std::fs;
+
+// mod type_state;
 
 use crate::{
     error::{AoCError, Result},
@@ -9,7 +11,7 @@ use crate::{
 pub struct Problem {
     year: u16,
     day: u8,
-    solution: RefCell<Box<dyn Solution>>,
+    solution: Box<dyn Solution>,
 }
 
 impl Problem {
@@ -20,7 +22,7 @@ impl Problem {
         Ok(Self {
             year,
             day,
-            solution: RefCell::new(solution),
+            solution,
         })
     }
 
@@ -45,7 +47,7 @@ impl Problem {
     pub fn get_day(&self) -> u8 {
         self.day
     }
-    pub fn get_solution(&self) -> &RefCell<Box<dyn Solution>> {
+    pub fn get_solution(&self) -> &Box<dyn Solution> {
         &self.solution
     }
 }

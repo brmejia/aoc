@@ -1,4 +1,5 @@
 use std::{
+    cell::RefCell,
     collections::{HashMap, HashSet},
     fmt::Debug,
 };
@@ -248,58 +249,60 @@ impl Default for Circuit {
 
 #[derive(Debug)]
 pub struct Day7 {
-    circuit: Circuit,
-    input_lines: Vec<String>,
+    circuit: RefCell<Circuit>,
+    input_lines: RefCell<Vec<String>>,
 }
 
 impl Day7 {
     pub fn new() -> Self {
         Self {
-            circuit: Circuit::default(),
-            input_lines: vec![],
+            circuit: RefCell::new(Circuit::default()),
+            input_lines: RefCell::new(vec![]),
         }
     }
-    fn with_input(&mut self, input: &str) -> &Self {
-        self.input_lines = input::parse_input_lines(input).unwrap();
+    fn with_input(&self, input: &str) -> &Self {
+        let mut input_lines = self.input_lines.borrow_mut();
+        *input_lines = input::parse_input_lines(input).unwrap();
         self
     }
 }
 
 impl Solution for Day7 {
-    fn part1(&mut self, input: &str) -> PartResult {
+    fn part1(&self, input: &str) -> PartResult {
         self.with_input(input);
-        for line in self.input_lines.iter() {
+        let mut circuit = self.circuit.borrow_mut();
+        for line in self.input_lines.borrow().iter() {
             let conn = Connection::from_str(line).unwrap();
-            self.circuit.add_connection(conn);
+            circuit.add_connection(conn);
         }
 
-        Ok(vec![self.circuit.signals.get("a").unwrap().to_string()])
+        Ok(vec![circuit.signals.get("a").unwrap().to_string()])
     }
 
-    fn part2(&mut self, input: &str) -> PartResult {
+    fn part2(&self, input: &str) -> PartResult {
         self.with_input(input.as_ref());
-        let prev_value = self.circuit.signals.get("a").unwrap().to_owned();
+        let mut circuit = self.circuit.borrow_mut();
+        let prev_value = circuit.signals.get("a").unwrap().to_owned();
         // Clear all signal values and redefine the value for b
-        self.circuit.signals.clear();
-        self.circuit.signals.insert("b".to_string(), prev_value);
+        circuit.signals.clear();
+        circuit.signals.insert("b".to_string(), prev_value);
 
         // ensure there are no remaining connections
-        self.circuit.remaining_connections.clear();
+        circuit.remaining_connections.clear();
 
         // Move all circuit connections to remaining_connections excluding signal b
-        let mut remaining_connections = self
-            .circuit
+        let mut remaining_connections = circuit
             .connections
             .drain(..)
             .filter(|conn| conn.output != *"b")
             .collect::<Vec<_>>();
-        self.circuit
+        circuit
             .remaining_connections
             .append(&mut remaining_connections);
 
-        self.circuit.process_remaining_connections();
+        circuit.process_remaining_connections();
 
-        let result = self.circuit.signals.get("a").unwrap().to_owned();
+        let result = circuit.signals.get("a").unwrap().to_owned();
         Ok(vec![result.to_string()])
     }
 }

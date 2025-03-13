@@ -7,21 +7,12 @@ use crate::{
 use lazy_static::lazy_static;
 use regex::Regex;
 
-#[derive(Debug)]
-pub struct Day8 {
-    input_lines: Vec<String>,
-}
+#[derive(Debug, Clone)]
+pub struct Day8 {}
 
 impl Day8 {
     pub fn new() -> Self {
-        Self {
-            input_lines: vec![],
-        }
-    }
-
-    fn with_input(&mut self, input: &str) -> &Self {
-        self.input_lines = input::parse_input_lines(input).unwrap();
-        self
+        Self {}
     }
 
     fn count_and_replace_hex(input: &str) -> (usize, String) {
@@ -78,22 +69,22 @@ impl Day8 {
 
         hex_count + quotes_count + bslashes_count + remainder.len()
     }
-
 }
 
 impl Solution for Day8 {
-    fn part1(&mut self, input: &str) -> PartResult {
-        self.with_input(input);
-        let counts = self.input_lines
+    fn part1(&self, input: &str) -> PartResult {
+        let input_lines: Vec<String> = input::parse_input_lines(input).unwrap();
+        let counts = input_lines
             .iter()
-            .map(|s| (s.len(), Day8::count_chars_in_str(s) ) )
+            .map(|s| (s.len(), Day8::count_chars_in_str(s)))
             .fold(0, |acc, x| acc + (x.0 - x.1));
 
+        // Ok(input_lines)
         Ok(vec![counts.to_string()])
     }
 
-    fn part2(&mut self, input: &str) -> PartResult {
-        self.with_input(input);
+    fn part2(&self, input: &str) -> PartResult {
+        let input_lines: Vec<String> = input::parse_input_lines(input).unwrap();
         Ok(vec!["Incomplete".to_string()])
     }
 }
@@ -185,7 +176,7 @@ mod tests {
             println!("==========================================================");
             dbg!(&expected_result);
             // dbg!(&input);
-            let line_result = (input.len(), Day8::count_chars_in_str(input) );
+            let line_result = (input.len(), Day8::count_chars_in_str(input));
             dbg!(&line_result);
             assert_eq!(line_result, expected_result.to_owned());
 
@@ -209,7 +200,7 @@ mod tests {
 
             let mut partial_solutions = Vec::default();
             for line in lines.iter() {
-                let line_result = (line.len(), Day8::count_chars_in_str(line) );
+                let line_result = (line.len(), Day8::count_chars_in_str(line));
                 let ref_line_result = part_a(line);
 
                 if ref_line_result != (line_result.0 - line_result.1) {
@@ -223,5 +214,26 @@ mod tests {
 
             assert_eq!(result, expected_result.to_owned());
         }
+    }
+
+    #[test]
+    fn part_2_instructions() {
+        let mut validations = vec![
+            (r#""""#, (6, 0)),
+            (r#""\""#, (3, 1)),
+            (r#""\x27""#, (6, 1)),
+            (r#""\"\"""#, (6, 2)),
+            (r#""abc""#, (5, 3)),
+            (r#""aaa\"aaa""#, (10, 7)),
+            (r#""\x27""#, (6, 1)),
+            (r#""\x4f\x22""#, (10, 2)),
+            (r#""\xab\"\xab""#, (12, 3)),
+            (r#""ikfv""#, (6, 4)),
+            (r#""\xd2cuho""#, (10, 5)),
+            (r#""vj""#, (4, 2)),
+            (r#""d""#, (3, 1)),
+            (r#""\\g""#, (5, 2)),
+            (r#""ubgxxcvnltzaucrzg\\xcez""#, (25, 22)),
+        ];
     }
 }

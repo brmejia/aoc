@@ -5,7 +5,7 @@ use crate::{
     solution::{PartResult, Solution},
 };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Day3 {}
 
 impl Day3 {
@@ -66,7 +66,7 @@ fn houses_visited_by_robo_santa(input: &str) -> usize {
 }
 
 impl Solution for Day3 {
-    fn part1(&mut self, input: &str) -> PartResult {
+    fn part1(&self, input: &str) -> PartResult {
         let lines = input::parse_input_lines::<String>(input).unwrap();
 
         Ok(lines
@@ -75,7 +75,7 @@ impl Solution for Day3 {
             .collect())
     }
 
-    fn part2(&mut self, input: &str) -> PartResult {
+    fn part2(&self, input: &str) -> PartResult {
         let lines = input::parse_input_lines::<String>(input).unwrap();
 
         Ok(lines

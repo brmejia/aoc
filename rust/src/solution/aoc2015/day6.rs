@@ -9,7 +9,7 @@ use crate::{
     solution::{PartResult, Solution},
 };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Day6 {}
 
 impl Day6 {
@@ -175,7 +175,7 @@ impl Grid {
 }
 
 impl Solution for Day6 {
-    fn part1(&mut self, input: &str) -> PartResult {
+    fn part1(&self, input: &str) -> PartResult {
         let lines = input::parse_input_lines::<String>(input).unwrap();
 
         let mut grid = Grid::new((1000, 1000));
@@ -192,7 +192,7 @@ impl Solution for Day6 {
         Ok(vec![grid.sum().to_string()])
     }
 
-    fn part2(&mut self, input: &str) -> PartResult {
+    fn part2(&self, input: &str) -> PartResult {
         let lines = input::parse_input_lines::<String>(input).unwrap();
 
         let mut grid = Grid::new((1000, 1000));

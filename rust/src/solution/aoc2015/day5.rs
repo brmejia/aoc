@@ -4,7 +4,7 @@ use crate::{
 };
 use itertools::Itertools;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Day5 {}
 
 impl Day5 {
@@ -48,7 +48,7 @@ fn is_super_nice(input: &str) -> bool {
 }
 
 impl Solution for Day5 {
-    fn part1(&mut self, input: &str) -> PartResult {
+    fn part1(&self, input: &str) -> PartResult {
         let lines = input::parse_input_lines::<String>(input).unwrap();
 
         let nice_words: usize = lines.iter().filter(|line| is_nice(line)).count();
@@ -56,7 +56,7 @@ impl Solution for Day5 {
         Ok(vec![nice_words.to_string()])
     }
 
-    fn part2(&mut self, input: &str) -> PartResult {
+    fn part2(&self, input: &str) -> PartResult {
         let lines = input::parse_input_lines::<String>(input).unwrap();
 
         let super_nice_words: usize = lines.iter().filter(|line| is_super_nice(line)).count();

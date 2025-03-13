@@ -32,8 +32,8 @@ fn solve_problem(problem: Problem, input: String) {
         .map(|part_idx| {
             let current = Instant::now();
             let result = match part_idx {
-                1 => problem.get_solution().borrow_mut().part1(&input),
-                2 => problem.get_solution().borrow_mut().part2(&input),
+                1 => problem.get_solution().part1(&input),
+                2 => problem.get_solution().part2(&input),
                 _ => todo!(),
             };
             let duration = current.elapsed();
@@ -63,6 +63,7 @@ fn main() {
             Ok(p) => {
                 println!("---- {} Day {} ----", p.get_year(), p.get_day());
                 let input = p.get_default_input().expect("Error getting default input");
+                // p.with_input(input).solve()
                 solve_problem(p, input);
             }
             Err(e) => println!("Error: {}", e),

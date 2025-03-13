@@ -29,7 +29,7 @@ pub fn get_solutions(year: u16, day: Option<u8>) -> HashMap<u8, Result<Box<dyn S
 type PartResult = Result<Vec<String>>;
 
 pub trait Solution {
-    fn part1(&mut self, input: &str) -> PartResult;
+    fn part1(&self, input: &str) -> PartResult;
 
-    fn part2(&mut self, input: &str) -> PartResult;
+    fn part2(&self, input: &str) -> PartResult;
 }
