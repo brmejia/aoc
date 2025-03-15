@@ -4,8 +4,8 @@ use std::fs;
 
 use crate::{
     error::{AoCError, Result},
-    input::get_default_input_path,
-    solution::{Solution, try_get_day_solution},
+    input, solution,
+    solution::Solution,
 };
 
 pub struct Problem {
@@ -17,7 +17,7 @@ pub struct Problem {
 impl Problem {
     // add code here
     pub fn new(year: u16, day: u8) -> Result<Self> {
-        let solution = try_get_day_solution(year, day)?;
+        let solution = solution::try_get_day_solution(year, day)?;
 
         Ok(Self {
             year,
@@ -27,7 +27,7 @@ impl Problem {
     }
 
     pub fn get_default_input(&self) -> Result<String> {
-        let input_path = get_default_input_path(self.year, self.day);
+        let input_path = input::get_default_input_path(self.year, self.day);
         fs::read_to_string(input_path).map_err(AoCError::IO)
     }
 
@@ -47,7 +47,8 @@ impl Problem {
     pub fn get_day(&self) -> u8 {
         self.day
     }
-    pub fn get_solution(&self) -> &Box<dyn Solution> {
-        &self.solution
+
+    pub fn get_solution(&self) -> &dyn Solution {
+        &*self.solution
     }
 }

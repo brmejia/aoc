@@ -1,5 +1,3 @@
-use std::collections::VecDeque;
-
 use crate::{
     input,
     solution::{PartResult, Solution},
@@ -41,6 +39,7 @@ impl Day8 {
 
         (quotes_count, input)
     }
+
     fn count_and_replace_backslashes(input: &str) -> (usize, String) {
         // lazy_static! {
         //     static ref BSLASH_RE: Regex = Regex::new(r#"\\"#).unwrap();
@@ -69,77 +68,40 @@ impl Day8 {
 
         hex_count + quotes_count + bslashes_count + remainder.len()
     }
+
+    fn encode_line(input: &str) -> String {
+        let encoded_input = input.replace(r#"\"#, r#"\\"#).replace(r#"""#, r#"\""#);
+        ["\"", &encoded_input, "\""].join("")
+    }
+
+    fn part_1(input: &str) -> usize {
+        let input_lines: Vec<String> = input::parse_input_lines(input).unwrap();
+        input_lines
+            .iter()
+            .filter(|s| !s.is_empty())
+            .map(|s| (s.len(), Day8::count_chars_in_str(s)))
+            .fold(0, |acc, x| acc + (x.0 - x.1))
+    }
+    fn part_2(input: &str) -> usize {
+        let input_lines: Vec<String> = input::parse_input_lines(input).unwrap();
+        input_lines
+            .iter()
+            .filter(|s| !s.is_empty())
+            .map(|s| (s.len(), Day8::encode_line(s).len()))
+            .fold(0, |acc, x| acc + (x.1 - x.0))
+    }
 }
 
 impl Solution for Day8 {
     fn part1(&self, input: &str) -> PartResult {
-        let input_lines: Vec<String> = input::parse_input_lines(input).unwrap();
-        let counts = input_lines
-            .iter()
-            .map(|s| (s.len(), Day8::count_chars_in_str(s)))
-            .fold(0, |acc, x| acc + (x.0 - x.1));
-
-        // Ok(input_lines)
+        let counts = Day8::part_1(input);
         Ok(vec![counts.to_string()])
     }
 
     fn part2(&self, input: &str) -> PartResult {
-        let input_lines: Vec<String> = input::parse_input_lines(input).unwrap();
-        Ok(vec!["Incomplete".to_string()])
+        let counts = Day8::part_2(input);
+        Ok(vec![counts.to_string()])
     }
-}
-
-enum EscapedState {
-    None,
-    Quote,
-    Hex(isize),
-}
-
-pub fn part_a(input: &str) -> usize {
-    let mut count = 0;
-    let mut count_b = 0;
-    for line in input.trim().split('\n') {
-        let mut chars: VecDeque<char> = line.chars().collect();
-        count_b += chars.len();
-
-        chars.pop_back();
-        chars.pop_front();
-
-        let mut escaped_state = EscapedState::None;
-        for c in &chars {
-            match escaped_state {
-                EscapedState::None => match c {
-                    '\\' => {
-                        escaped_state = EscapedState::Quote;
-                        count += 1;
-                    }
-                    _ => {
-                        count += 1;
-                    }
-                },
-                EscapedState::Quote => match c {
-                    '\\' | '"' => {
-                        escaped_state = EscapedState::None;
-                    }
-                    'x' => {
-                        escaped_state = EscapedState::Hex(2);
-                    }
-                    _ => {
-                        eprintln!("{line} {c}");
-                        panic!();
-                    }
-                },
-                EscapedState::Hex(i) => {
-                    if i == 1 {
-                        escaped_state = EscapedState::None;
-                    } else {
-                        escaped_state = EscapedState::Hex(i - 1);
-                    }
-                }
-            }
-        }
-    }
-    count_b - count
 }
 
 #[cfg(test)]
@@ -150,6 +112,47 @@ mod tests {
     use crate::input;
 
     use super::*;
+
+    const VALIDATIONS: [(&str, &str, usize); 4] = [
+        (r#""""#, r#""\"\"""#, 6),
+        (r#""abc""#, r#""\"abc\"""#, 5),
+        (r#""aaa\"aaa""#, r#""\"aaa\\\"aaa\"""#, 10),
+        (r#""\x27""#, r#""\"\\x27\"""#, 6),
+    ];
+
+    #[test]
+    fn part_2_instructions_encoding() {
+        for (input, expected_result, _) in VALIDATIONS.into_iter() {
+            let encoded_line = Day8::encode_line(input);
+            assert_eq!(encoded_line, expected_result);
+        }
+    }
+
+    #[test]
+    fn part_2_instructions() {
+        for (line, expected_encoded_line, _expected_line_count) in VALIDATIONS.iter() {
+            let encoded_line = Day8::encode_line(line);
+            assert_eq!(encoded_line, *expected_encoded_line);
+            assert_eq!(encoded_line.len(), expected_encoded_line.len());
+        }
+
+        let input_lines: Vec<_> = VALIDATIONS.iter().map(|l| l.0).collect();
+        let expected_result = 19;
+        let part_2 = Day8::part_2(input_lines.join("\n").as_str());
+        assert_eq!(part_2, expected_result);
+    }
+
+    #[test]
+    fn part_2_example_file() {
+        let test_files_setups = [("../inputs/2015/day8_example.txt", 19)];
+
+        for (input_file_path, _expected_result) in test_files_setups.iter() {
+            let file_content = fs::read_to_string(input_file_path).unwrap();
+
+            let part_2 = Day8::part_2(&file_content);
+            dbg!(part_2);
+        }
+    }
 
     #[test]
     fn test_part_1_examples() {
@@ -189,51 +192,22 @@ mod tests {
         let test_files_setups = [
             ("../inputs/2015/day8_jkpr.txt", 1350),
             ("../inputs/2015/day8_jocelyn_stericher.txt", 1371),
-            ("../inputs/2015/day8_example.txt", 17),
+            ("../inputs/2015/day8_example.txt", 12),
             ("../inputs/2015/day8.txt", 1342),
         ];
 
         for (input_file_path, expected_result) in test_files_setups.iter() {
-            let file_content = fs::read_to_string(input_file_path).unwrap();
-            let ref_response = part_a(&file_content);
             let lines: Vec<String> = input::parse_file_lines(input_file_path).unwrap();
 
             let mut partial_solutions = Vec::default();
             for line in lines.iter() {
                 let line_result = (line.len(), Day8::count_chars_in_str(line));
-                let ref_line_result = part_a(line);
-
-                if ref_line_result != (line_result.0 - line_result.1) {
-                    dbg!(line, ref_line_result, line_result);
-                }
                 partial_solutions.push(line_result);
             }
 
             let result = partial_solutions.iter().fold(0, |acc, x| acc + (x.0 - x.1));
-            assert_eq!(ref_response, result);
 
             assert_eq!(result, expected_result.to_owned());
         }
-    }
-
-    #[test]
-    fn part_2_instructions() {
-        let mut validations = vec![
-            (r#""""#, (6, 0)),
-            (r#""\""#, (3, 1)),
-            (r#""\x27""#, (6, 1)),
-            (r#""\"\"""#, (6, 2)),
-            (r#""abc""#, (5, 3)),
-            (r#""aaa\"aaa""#, (10, 7)),
-            (r#""\x27""#, (6, 1)),
-            (r#""\x4f\x22""#, (10, 2)),
-            (r#""\xab\"\xab""#, (12, 3)),
-            (r#""ikfv""#, (6, 4)),
-            (r#""\xd2cuho""#, (10, 5)),
-            (r#""vj""#, (4, 2)),
-            (r#""d""#, (3, 1)),
-            (r#""\\g""#, (5, 2)),
-            (r#""ubgxxcvnltzaucrzg\\xcez""#, (25, 22)),
-        ];
     }
 }

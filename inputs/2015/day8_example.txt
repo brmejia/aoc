@@ -1,4 +1,3 @@
-"\xaf"
 ""
 "abc"
 "aaa\"aaa"

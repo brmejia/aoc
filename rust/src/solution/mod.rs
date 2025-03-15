@@ -11,6 +11,7 @@ pub fn try_get_day_solution(year: u16, day: u8) -> Result<Box<dyn Solution>> {
     }
 }
 
+#[allow(dead_code)]
 pub fn get_solutions(year: u16, day: Option<u8>) -> HashMap<u8, Result<Box<dyn Solution>>> {
     match year {
         2015 => match day {

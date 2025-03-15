@@ -19,13 +19,9 @@ pub fn split_line<T: FromStr>(line: &str, sep: char) -> Result<Vec<T>> {
         .collect::<Vec<T>>())
 }
 
+#[allow(dead_code)]
 pub fn parse_file_lines<T: FromStr>(file_path: impl AsRef<Path>) -> Result<Vec<T>> {
-    let file_content = fs::read_to_string(&file_path)
-        // .context(format!(
-        //     "Unable to read input file {:?}",
-        //     file_path.as_ref()
-        // ))
-    ?;
+    let file_content = fs::read_to_string(&file_path)?;
 
     parse_input_lines(&file_content)
 }
