@@ -9,6 +9,7 @@ mod day5;
 mod day6;
 mod day7;
 mod day8;
+mod day9;
 
 use std::collections::HashMap;
 
@@ -20,13 +21,14 @@ use day5::Day5;
 use day6::Day6;
 use day7::Day7;
 use day8::Day8;
+use day9::Day9;
 
 use super::{
     Solution,
     error::{Result, SolutionError},
 };
 
-const UPPER_DAYS_LIMIT: u8 = 9;
+const UPPER_DAYS_LIMIT: u8 = 10;
 
 /// Get the solution for the day
 ///
@@ -44,6 +46,7 @@ pub fn try_get_day_solution(day: u8) -> Result<Box<dyn Solution>> {
         6 => Ok(Box::new(Day6::new())),
         7 => Ok(Box::new(Day7::new())),
         8 => Ok(Box::new(Day8::new())),
+        9 => Ok(Box::new(Day9::new())),
         UPPER_DAYS_LIMIT..=24 => Err(SolutionError::NotImplementedDay { year: 2015, day }),
         0 | 25.. => Err(SolutionError::InvalidDay { day }),
     };
