@@ -1,5 +1,9 @@
 extern crate nalgebra as na;
 
+#[macro_use]
+extern crate log;
+
+use tracing_subscriber::{EnvFilter, fmt, prelude::*};
 mod error;
 mod input;
 mod problem;
@@ -51,6 +55,11 @@ fn solve_problem(problem: Problem, input: String) {
 }
 
 fn main() {
+    tracing_subscriber::registry()
+        .with(fmt::layer())
+        .with(EnvFilter::from_default_env())
+        .init();
+
     let cli = Cli::parse();
 
     let problems = match cli.day {
